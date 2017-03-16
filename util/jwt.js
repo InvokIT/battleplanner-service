@@ -27,4 +27,5 @@ const validateJwt = (token) => {
 
 module.exports.createJwtForUser = createJwtForUser;
 module.exports.validateJwt = validateJwt;
-
+module.exports.options = Object.assign({algorithms: ["RS256"]}, jwtOptions);
+module.exports.key = publicKey;

@@ -12,10 +12,12 @@
   "dependencies": {
     "base-64": "^0.1.0",
     "bunyan": "^1.8.8",
+    "cors": "^2.8.1",
     "express": "^4.15.2",
     "jsonwebtoken": "^7.3.0",
     "lodash": "^4.17.4",
     "passport": "^0.3.2",
+    "passport-jwt": "^2.2.1",
     "passport-restify": "^1.0.1",
     "passport-steam": "^1.0.8",
     "pug": "^2.0.0-beta11",

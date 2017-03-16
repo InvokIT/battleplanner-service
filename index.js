@@ -2,8 +2,10 @@ const bunyan = require('bunyan');
 const express = require('express');
 const passport = require('passport');
 const SteamStrategy = require('passport-steam').Strategy;
-const User = require('./models/user');
+const JwtStrategy = require("passport-jwt").Strategy;
+const ExtractJwt = require("passport-jwt").ExtractJwt;
 const authController = require('./controllers/auth');
+const jwtOptions = require("./util/jwt").options;
 
 const log = bunyan.createLogger({name: "app", level: 'debug'});
 
@@ -31,7 +33,19 @@ passport.use(new SteamStrategy({
     profile.identifier = identifier;
 
     authController.validateSteamProfile(profile)
-        .then(jwt => done(null, jwt));
+        .then(jwt => done(null, jwt), done);
+}));
+
+passport.use(new JwtStrategy({
+    secretOrKey: require("./util/jwt").key,
+    jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme("Bearer"),
+    issuer: jwtOptions.issuer,
+    algorithms: jwtOptions.algorithms,
+    audience: jwtOptions.audience,
+
+}, (jwtPayload, done) => {
+    const userId = jwtPayload.sub;
+    done(null, userId);
 }));
 
 const app = express();
@@ -40,6 +54,9 @@ app.set('views', './views');
 app.set('view engine', 'pug');
 
 app.use(passport.initialize());
+app.use(require("cors")({
+    origin: cfg.clientOrigin
+}));
 
 // GET /auth/steam
 //   Use passport.authenticate() as route middleware to authenticate the
@@ -50,7 +67,8 @@ app.get('/auth/steam',
     passport.authenticate('steam', {failureRedirect: '/', session: false}),
     function (req, res) {
         res.redirect('/');
-    });
+    }
+);
 
 // GET /auth/steam/return
 //   Use passport.authenticate() as route middleware to authenticate the
@@ -64,6 +82,14 @@ app.get('/auth/steam/return',
             response: req.user,
             targetOrigin: cfg.clientOrigin
         });
-    });
+    }
+);
+
+app.get("/auth/validate",
+    passport.authenticate("jwt", { session: false }),
+    (req, res) => {
+        res.sendStatus(204);
+    }
+);
 
 app.listen(cfg.hostPort);
