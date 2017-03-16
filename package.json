@@ -1,0 +1,29 @@
+{
+  "name": "gcs-match-setup-server",
+  "version": "0.0.1",
+  "main": "index.js",
+  "author": "Qvazar <sj@invokit.dk>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "mocha --growl --watch --harmony ./**/*.test.js",
+    "test": "mocha --harmony ./**/*.test.js",
+    "debug": "NODE_ENV=debug STEAM_REALM=http://localhost STEAM_KEY=9847B788F2BF89196983C546D3ECAC14 node ./index.js"
+  },
+  "dependencies": {
+    "base-64": "^0.1.0",
+    "bunyan": "^1.8.8",
+    "express": "^4.15.2",
+    "jsonwebtoken": "^7.3.0",
+    "lodash": "^4.17.4",
+    "passport": "^0.3.2",
+    "passport-restify": "^1.0.1",
+    "passport-steam": "^1.0.8",
+    "pug": "^2.0.0-beta11",
+    "restify": "^4.3.0",
+    "uuid": "^3.0.1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0"
+  }
+}

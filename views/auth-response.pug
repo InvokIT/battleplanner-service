@@ -1,0 +1,17 @@
+doctype html
+html
+    head
+        style.
+            body {
+                background-color: black;
+                margin:0;
+                padding:0;
+            }
+
+    body
+        script.
+            window.opener.postMessage({
+                type: "auth-response",
+                value: !{JSON.stringify(response)}
+            },
+            "#{targetOrigin}");

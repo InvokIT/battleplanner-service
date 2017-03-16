@@ -1,0 +1,32 @@
+{
+  "provider": "steam",
+  "_json": {
+    "steamid": "76561198038741197",
+    "communityvisibilitystate": 3,
+    "profilestate": 1,
+    "personaname": "Qvazar",
+    "lastlogoff": 1489581790,
+    "profileurl": "http://steamcommunity.com/profiles/76561198038741197/",
+    "avatar": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/e6/e67d1e9ca8a6399421f7f04fd279e33d5bb850f2.jpg",
+    "avatarmedium": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/e6/e67d1e9ca8a6399421f7f04fd279e33d5bb850f2_medium.jpg",
+    "avatarfull": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/e6/e67d1e9ca8a6399421f7f04fd279e33d5bb850f2_full.jpg",
+    "personastate": 1,
+    "primaryclanid": "103582791433667662",
+    "timecreated": 1298826591,
+    "personastateflags": 0
+  },
+  "id": "76561198038741197",
+  "displayName": "Qvazar",
+  "photos": [
+    {
+      "value": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/e6/e67d1e9ca8a6399421f7f04fd279e33d5bb850f2.jpg"
+    },
+    {
+      "value": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/e6/e67d1e9ca8a6399421f7f04fd279e33d5bb850f2_medium.jpg"
+    },
+    {
+      "value": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/e6/e67d1e9ca8a6399421f7f04fd279e33d5bb850f2_full.jpg"
+    }
+  ],
+  "identifier": "http://steamcommunity.com/openid/id/76561198038741197"
+}
