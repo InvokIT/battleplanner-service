@@ -15,7 +15,8 @@ const createJwtForUser = (user) => {
         steamId: user.steam.id,
         steamIdentifier: user.steam.identifier,
         displayName: user.displayName,
-        avatarUrl: user.avatarUrl
+        avatarUrl: user.avatarUrl,
+        roles: user.roles || []
     }, privateKey, Object.assign({}, jwtOptions, {subject: user.id}));
 };
 

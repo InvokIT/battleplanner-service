@@ -1,12 +1,9 @@
-const _ = require("lodash");
+const _tail = require("lodash/");
 
 const updateUserFromSteamProfile = (user, steamProfile) => {
-    user.steam = {
-        id: steamProfile.id,
-        identifier: steamProfile.identifier
-    };
+    user.steamId = steamProfile.identifier;
 
-    user.avatarUrl = _.last(steamProfile.photos).value;
+    user.avatarUrl = _tail(steamProfile.photos).value;
     user.displayName = steamProfile.displayName;
 
     return user;

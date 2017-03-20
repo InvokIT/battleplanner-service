@@ -5,11 +5,16 @@
   "author": "Qvazar <sj@invokit.dk>",
   "license": "MIT",
   "scripts": {
+    "start": "node ./index.js",
     "dev": "mocha --growl --watch --harmony ./**/*.test.js",
     "test": "mocha --harmony ./**/*.test.js",
     "debug": "NODE_ENV=debug STEAM_REALM=http://localhost STEAM_KEY=9847B788F2BF89196983C546D3ECAC14 node ./index.js"
   },
+  "engines": {
+    "node": "6.10.0"
+  },
   "dependencies": {
+    "@google-cloud/datastore": "^0.7.1",
     "base-64": "^0.1.0",
     "bunyan": "^1.8.8",
     "cors": "^2.8.1",
