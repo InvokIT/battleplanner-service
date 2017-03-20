@@ -29,7 +29,7 @@ const mockDatastore = () => {
             }
 
             if (_isString(path)) {
-                return {path:[path, undefined]};
+                return {path: [path, undefined]};
             }
 
             return path;
@@ -77,6 +77,66 @@ describe("google/repos/generic-repo", () => {
             return repo.save(model)
                 .then(() => expect(model.def2).to.equal("from fn"));
         });
+
+        it("should create indexes on indexed properties", () => {
+            return repo.save({
+                id: "index-test",
+                indexedProp: "indexed"
+            }).then(() => {
+                const argsData = ds.save.lastCall.args[0].data;
+                expect(argsData.find(p => p.name === "indexedProp")).to.eql({
+                    name: "indexedProp",
+                    value: "indexed",
+                    excludeFromIndexes: false
+                });
+            });
+        });
+
+        it("should exclude indexes on non-indexed properties", () => {
+            return repo.save({
+                id: "index-test",
+                strProp: "not indexed"
+            }).then(() => {
+                const argsData = ds.save.lastCall.args[0].data;
+                expect(argsData.find(p => p.name === "strProp")).to.eql({
+                    name: "strProp",
+                    value: "not indexed",
+                    excludeFromIndexes: true
+                });
+            });
+        });
+
+        it("should translate foreign ids to keys", () => {
+            return repo.save({
+                id: "key-test",
+                refProp: "foreign-id"
+            }).then(() => {
+                const argsData = ds.save.lastCall.args[0].data;
+                expect(argsData.find(p => p.name === "refProp")).to.eql({
+                    name: "refProp",
+                    value: ds.key(["ForeignKind", "foreign-id"]),
+                    excludeFromIndexes: true
+                });
+            });
+        });
+
+        it("should translate foreign id arrays to key arrays", () => {
+            return repo.save({
+                id: "key-test",
+                refProp: ["foreign-id1", "foreign-id2"]
+            }).then(() => {
+                const argsData = ds.save.lastCall.args[0].data;
+                expect(argsData.find(p => p.name === "refProp")).to.eql({
+                    name: "refProp",
+                    value: [
+                        ds.key(["ForeignKind", "foreign-id1"]),
+                        ds.key(["ForeignKind", "foreign-id2"])
+
+                    ],
+                    excludeFromIndexes: true
+                });
+            });
+        });
     });
 
     describe("get", () => {
@@ -97,7 +157,7 @@ describe("google/repos/generic-repo", () => {
                 });
         });
 
-        it("should return a model with foreign ids assigned from the key value", () => {
+        it("should translate foreign keys to ids", () => {
             ds.get.resolves([{
                 [ds.KEY]: ds.key(["Test", "test-id"]),
                 "refProp": ds.key(["ForeignKind", "test-id2"])
@@ -109,24 +169,16 @@ describe("google/repos/generic-repo", () => {
                 });
         });
 
-        it("should create indexes on indexed properties", () => {
-            return repo.save({
-                id: "index-test",
-                indexedProp: "indexed"
-            }).then(() => {
-                const argsData = ds.save.lastCall.args[0].data;
-                expect(argsData.find(p => p.name === "indexedProp")).to.eql({name: "indexedProp", value: "indexed", excludeFromIndexes: false});
-            });
-        });
+        it("should translate foreign key arrays to id arrays", () => {
+            ds.get.resolves([{
+                [ds.KEY]: ds.key(["Test", "test-id"]),
+                "refProp": [ds.key(["ForeignKind", "foreign-id1"]), ds.key(["ForeignKind", "foreign-id2"])]
+            }]);
 
-        it("should exclude indexes on non-indexed properties", () => {
-            return repo.save({
-                id: "index-test",
-                strProp: "not indexed"
-            }).then(() => {
-                const argsData = ds.save.lastCall.args[0].data;
-                expect(argsData.find(p => p.name === "strProp")).to.eql({name: "strProp", value: "not indexed", excludeFromIndexes: true});
-            });
+            return repo.get("test-id")
+                .then(model => {
+                    expect(model.refProp).to.eql(["foreign-id1", "foreign-id2"]);
+                });
         });
     });
 

@@ -99,9 +99,13 @@ class GenericRepo {
         const data = _transform(model, (props, value, name) => {
             // Skip the id property since it's only used in the key for this entity
             if (name !== idProp && this.validProps.has(name)) {
-                const ref = refs[name];
-                if (ref) {
-                    value = ds.key(ref, value);
+                const refKind = refs[name];
+                if (refKind) {
+                    if (_isArray(value)) {
+                        value = value.map(v => ds.key([refKind, v]));
+                    } else {
+                        value = ds.key([refKind, value]);
+                    }
                 }
 
                 props.push({
@@ -122,7 +126,12 @@ class GenericRepo {
             if (this.validProps.has(name)) {
                 if (name in this.refs) {
                     log.debug({key: value}, "Transforming foreign key");
-                    value = value.path[1];
+
+                    if (_isArray(value)) {
+                        value = value.map(v => v.path[1]);
+                    } else {
+                        value = value.path[1];
+                    }
                 }
 
                 model[name] = value;
