@@ -3,6 +3,7 @@ const _isNil = require("lodash/isNil");
 const _isArray = require("lodash/isArray");
 const _isFunction = require("lodash/isFunction");
 const _forEach = require("lodash/forEach");
+const _keys = require("lodash/keys");
 const log = require('bunyan').createLogger({name: "google/models/GenericRepo"});
 
 class GenericRepo {
@@ -25,7 +26,7 @@ class GenericRepo {
         this.indexProps = new Set(indexes);
         this.refs = refs;
         this.defaults = defaults;
-        this.validProps = new Set(props.concat(indexes, Object.keys(refs), Object.keys(defaults)));
+        this.validProps = new Set(props.concat(indexes, _keys(refs), _keys(defaults)));
     }
 
     save(model) {

@@ -21,3 +21,5 @@ router.use(isMatchAdmin);
 router.post("/create",
     (req, res) => matchController.create(req.body).then(match => res.json(match))
 );
+
+module.exports = router;

@@ -7,15 +7,15 @@ RUN apt-get update && apt-get install -y curl apt-transport-https && \
 
 EXPOSE 8080
 
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+RUN mkdir -p /usr/app/src
+WORKDIR /usr/app
 
 ARG NODE_ENV
 ENV NODE_ENV $NODE_ENV
 ENV PROJECT_ID=battle-planner
 
-COPY package.json yarn.lock /usr/src/app/
+COPY package.json yarn.lock /usr/app/
 RUN yarn install --prod
-COPY ./src /usr/src/app
+COPY ./src/ /usr/app/src/
 
 CMD [ "yarn", "start" ]

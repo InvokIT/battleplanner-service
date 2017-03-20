@@ -20,4 +20,4 @@ class UserRepo extends GenericRepo {
     }
 }
 
-export default UserRepo;
+module.exports = UserRepo;

@@ -5,7 +5,7 @@
   "author": "Qvazar <sj@invokit.dk>",
   "license": "MIT",
   "scripts": {
-    "start": "node ./index.js",
+    "start": "node ./src/index.js",
     "dev": "NODE_ENV=TEST mocha --growl --watch --harmony $(find ./src -name *.test.js)",
     "test": "mocha --harmony $(find ./src -name *.test.js)",
     "debug": "NODE_ENV=debug STEAM_REALM=http://localhost STEAM_KEY=9847B788F2BF89196983C546D3ECAC14 node ./index.js"

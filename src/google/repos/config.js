@@ -8,7 +8,7 @@ const datastore = Datastore({
 });
 
 module.exports = {
-    user: new require("./user-repo")({datastore}),
+    user: new (require("./user-repo"))({datastore}),
     match: new GenericRepo(
         {
             kind: "match",
