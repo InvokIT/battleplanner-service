@@ -8,17 +8,18 @@
     "start": "node ./src/index.js",
     "dev": "NODE_ENV=TEST mocha --growl --watch --harmony $(find ./src -name *.test.js)",
     "test": "mocha --harmony $(find ./src -name *.test.js)",
-    "debug": "NODE_ENV=debug STEAM_REALM=http://localhost STEAM_KEY=9847B788F2BF89196983C546D3ECAC14 node ./index.js"
+    "debug": "NODE_ENV=debug STEAM_REALM=battleplanner-162115.appspot.com STEAM_KEY=758275E6152418D20FFD77BE0317006D PROJECT_ID=battleplanner-162115 REPLAY_BUCKET_NAME=replays-battleplanner-dev node ./src/index.js"
   },
   "engines": {
     "node": "6.10.0"
   },
   "dependencies": {
-    "@google-cloud/datastore": "^0.7.1",
     "body-parser": "^1.17.1",
     "bunyan": "^1.8.8",
     "cors": "^2.8.1",
     "express": "^4.15.2",
+    "fast-crc32c": "^1.0.4",
+    "google-cloud": "^0.49.0",
     "jsonwebtoken": "^7.3.0",
     "lodash": "^4.17.4",
     "passport": "^0.3.2",

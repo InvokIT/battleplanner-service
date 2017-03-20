@@ -61,6 +61,8 @@ app.use(require("cors")({
     origin: cfg.clientOrigin
 }));
 
+app.get("/_ah/health", (req, res) => res.sendStatus(201));
+
 app.use("/auth", require("./routes/auth"));
 app.use("/match", require("./routes/match"));
 

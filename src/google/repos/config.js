@@ -1,9 +1,9 @@
 const GenericRepo = require("./generic-repo");
-const Datastore = require('@google-cloud/datastore');
+var gcloud = require('google-cloud');
 
 const projectId = process.env.PROJECT_ID;
 
-const datastore = Datastore({
+const datastore = gcloud.datastore({
     projectId: projectId
 });
 
@@ -13,5 +13,6 @@ module.exports = {
         {
             kind: "match",
             props: ["state", "rounds"]
-        })
+        }),
+    replay: require("./replay-repo")
 };
