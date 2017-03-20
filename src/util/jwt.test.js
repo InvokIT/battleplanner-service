@@ -5,7 +5,7 @@ const _ = require("lodash");
 
 const createJwtForUser = require("./jwt").createJwtForUser;
 
-describe("jwt", () => {
+describe("util/jwt", () => {
 
     let user;
 
@@ -57,7 +57,7 @@ describe("jwt", () => {
             const jwt = createJwtForUser(user);
             const decodedPayload = JSON.parse(base64.decode(jwt.split(".")[1]));
 
-            const allowedKeys = ["sub", "displayName", "steamId", "steamIdentifier", "avatarUrl", "iat", "exp", "iss"];
+            const allowedKeys = ["sub", "displayName", "steamId", "steamIdentifier", "avatarUrl", "roles", "iat", "exp", "iss"];
 
             const keyDiff = _(decodedPayload).keys().difference(allowedKeys).value();
 

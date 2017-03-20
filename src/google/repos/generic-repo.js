@@ -2,6 +2,7 @@ const _transform = require("lodash/transform");
 const _isNil = require("lodash/isNil");
 const _isArray = require("lodash/isArray");
 const _isFunction = require("lodash/isFunction");
+const _forEach = require("lodash/forEach");
 const log = require('bunyan').createLogger({name: "google/models/GenericRepo"});
 
 class GenericRepo {
@@ -28,8 +29,15 @@ class GenericRepo {
     }
 
     save(model) {
+        if (_isNil(model)) {
+            throw new Error("model is nil.");
+        }
+
         const idProp = this.idProp;
         const key = this.datastore.key([this.kind, model[idProp]]);
+        log.debug({key}, "Saving model");
+
+        this.assignDefaults(model);
 
         const entity = {
             key,
@@ -48,7 +56,7 @@ class GenericRepo {
     }
 
     get(id) {
-        const key = this.datastore.key(this.kind, id);
+        const key = this.datastore.key([this.kind, id]);
         return this.datastore.get(key)
             .then(res => {
                 log.debug({response: res}, `Fetched entity of kind ${this.kind} with id ${id}.`);
@@ -72,21 +80,25 @@ class GenericRepo {
             });
     }
 
+    assignDefaults(model) {
+        _forEach(this.defaults, (value, name) => {
+            if (_isNil(model[name])) {
+                model[name] = _isFunction(value) ? value() : value;
+            }
+        });
+
+        return model;
+    }
+
     modelToEntityData(model) {
         const idProp = this.idProp;
         const indexes = this.indexProps;
         const refs = this.refs;
-        const defs = this.defaults;
         const ds = this.datastore;
 
         const data = _transform(model, (props, value, name) => {
             // Skip the id property since it's only used in the key for this entity
             if (name !== idProp && this.validProps.has(name)) {
-                const def = defs[name];
-                if (_isNil(value) && def) {
-                    value = _isFunction(def) ? def() : def;
-                }
-
                 const ref = refs[name];
                 if (ref) {
                     value = ds.key(ref, value);
@@ -107,17 +119,20 @@ class GenericRepo {
 
     entityToModel(entity) {
         return _transform(entity, (model, value, name) => {
-            if (name in this.validProps) {
+            if (this.validProps.has(name)) {
                 if (name in this.refs) {
+                    log.debug({key: value}, "Transforming foreign key");
                     value = value.path[1];
                 }
 
                 model[name] = value;
             }
+
+            return model;
         }, {
             [this.idProp]: entity[this.datastore.KEY].path[1]
         });
     }
 }
 
-export default GenericRepo;
+module.exports = GenericRepo;
