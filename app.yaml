@@ -3,7 +3,7 @@ env: flex
 service: default
 
 network:
-  instance_tag: battleplanner-api
+  #instance_tag: battleplanner-api
 
 resources:
   cpu: 1
@@ -23,7 +23,7 @@ env_variables:
   NODE_ENV: production
   PUBLIC_ORIGIN: http://battleplanner-162115.appspot.com
   STEAM_REALM: battleplanner-162115.appspot.com
-  STEAM_KEY: 758275E6152418D20FFD77BE0317006D
+  STEAM_KEY: 9A510CF5E1D0653E3AF491A93204B5A4
   CLIENT_ORIGIN: http://battleplanner-162115.appspot.com
   REPLAY_BUCKET_NAME: replays-battleplanner
   PROJECT_ID: battleplanner-162115

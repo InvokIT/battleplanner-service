@@ -1,3 +1,4 @@
+const path = require("path");
 const bunyan = require('bunyan');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -8,7 +9,7 @@ const ExtractJwt = require("passport-jwt").ExtractJwt;
 const authController = require('./controllers/auth');
 const jwtOptions = require("./util/jwt").options;
 
-const log = bunyan.createLogger({name: "app", level: 'debug'});
+const log = bunyan.createLogger({name: "app"});
 
 const debug = process.env.NODE_ENV !== "production";
 
@@ -20,10 +21,6 @@ const cfg = {
     steamKey: process.env.STEAM_KEY,
     clientOrigin: process.env.CLIENT_ORIGIN || 'http://localhost:3000'
 };
-
-log.info({config: cfg});
-
-//const authCtrl = new AuthController(userRepo);
 
 passport.use(new SteamStrategy({
     returnURL: `${cfg.publicOrigin}/auth/steam/return`,
@@ -52,7 +49,7 @@ passport.use(new JwtStrategy({
 const app = express();
 
 app.set('trust proxy', true);
-app.set('views', './views');
+app.set('views', path.join(__dirname, './views'));
 app.set('view engine', 'pug');
 
 app.use(bodyParser.json());
@@ -61,9 +58,11 @@ app.use(require("cors")({
     origin: cfg.clientOrigin
 }));
 
-app.get("/_ah/health", (req, res) => res.sendStatus(201));
+app.get("/_ah/health", (req, res) => res.sendStatus(200));
 
 app.use("/auth", require("./routes/auth"));
-app.use("/match", require("./routes/match"));
+app.use("/matches", require("./routes/matches"));
 
 app.listen(cfg.hostPort);
+
+log.info({config: cfg}, "App started.");

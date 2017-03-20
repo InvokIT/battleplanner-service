@@ -12,8 +12,7 @@ const jwtOptions = {
 
 const createJwtForUser = (user) => {
     return jwt.sign({
-        steamId: user.steam.id,
-        steamIdentifier: user.steam.identifier,
+        steamId: user.steamId,
         displayName: user.displayName,
         avatarUrl: user.avatarUrl,
         roles: user.roles || []

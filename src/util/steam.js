@@ -1,9 +1,12 @@
-const _tail = require("lodash/");
+const log = require('bunyan').createLogger({name: "util/steam"});
+const _tail = require("lodash/tail");
 
 const updateUserFromSteamProfile = (user, steamProfile) => {
+    log.info({user, steamProfile}, "Updating user profile info from steam data.")
+
     user.steamId = steamProfile.identifier;
 
-    user.avatarUrl = _tail(steamProfile.photos).value;
+    user.avatarUrl = steamProfile._json.avatarfull;
     user.displayName = steamProfile.displayName;
 
     return user;

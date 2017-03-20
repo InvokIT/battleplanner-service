@@ -1,5 +1,6 @@
 const _head = require("lodash/head");
 const _flatten = require("lodash/flatten");
+const moment = require("moment");
 const GenericRepo = require("./generic-repo");
 
 class UserRepo extends GenericRepo {
@@ -9,7 +10,7 @@ class UserRepo extends GenericRepo {
             kind: require("./kinds").User,
             indexes: ["steamId"],
             props: ["displayName", "steamId", "avatarUrl", "roles"],
-            defaults: {"created" : () => Date.now() }
+            defaults: {"created" : () => moment().toISOString() }
         });
     }
 

@@ -6,7 +6,7 @@ const matchController = require("../controllers/match");
 
 
 const isMatchAdmin = (req, res, next) => {
-    if (req.user.roles.includes("matchAdmin")) {
+    if (!req.user.roles.includes("matchAdmin")) {
         log.info({user, url: req.url, body: req.body}, "Unauthorized access.");
         res.sendStatus(401);
     } else {

@@ -24,7 +24,7 @@ router.get('/steam/return',
     function (req, res) {
         res.render("auth-response", {
             response: req.user,
-            targetOrigin: cfg.clientOrigin
+            targetOrigin: process.env.CLIENT_ORIGIN || 'http://localhost:3000'
         });
     }
 );

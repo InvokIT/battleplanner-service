@@ -10,11 +10,11 @@ module.exports = {
         const steamId = steamProfile.identifier;
 
         return users.getBySteamId(steamId)
-            // Create new user if none found
+        // Create new user if none found
             .then(user => user || {})
             // Update profile data
             .then(user => updateUserFromSteamProfile(user, steamProfile))
-            .then(user => user.save())
+            .then(user => users.save(user))
             .then(createJwtForUser);
     },
 

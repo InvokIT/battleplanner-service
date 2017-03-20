@@ -6,8 +6,11 @@ const _forEach = require("lodash/forEach");
 const _keys = require("lodash/keys");
 const log = require('bunyan').createLogger({name: "google/models/GenericRepo"});
 
+const idToString = (num) => parseInt(num).toString(32);
+const idFromString = (hex) => parseInt(hex, 32);
+
 class GenericRepo {
-    constructor({datastore, kind, id = "id", indexes, props, refs, defaults}) {
+    constructor({datastore, kind, id = "id", indexes = [], props = [], refs = {}, defaults = {}}) {
         if (_isNil(kind)) {
             throw new Error("kind is nil.");
         }
@@ -35,8 +38,8 @@ class GenericRepo {
         }
 
         const idProp = this.idProp;
-        const key = this.datastore.key([this.kind, model[idProp]]);
-        log.debug({key}, "Saving model");
+        const key = this.datastore.key([this.kind, idFromString(model[idProp])]);
+        log.info({key, model}, "Saving model");
 
         this.assignDefaults(model);
 
@@ -47,27 +50,27 @@ class GenericRepo {
 
         return this.datastore.save(entity)
             .then(res => {
-                log.debug({response: res}, `Saved entity with kind ${this.kind}.`);
+                log.info({response: res}, `Saved entity with kind ${this.kind}.`);
 
                 const entityId = key.path[1];
-                model[idProp] = entityId;
+                model[idProp] = idToString(entityId);
 
                 return model;
             });
     }
 
     get(id) {
-        const key = this.datastore.key([this.kind, id]);
+        const key = this.datastore.key([this.kind, idFromString(id)]);
         return this.datastore.get(key)
             .then(res => {
-                log.debug({response: res}, `Fetched entity of kind ${this.kind} with id ${id}.`);
+                log.info({response: res}, `Fetched entity of kind ${this.kind} with id ${id}.`);
                 return this.entityToModel(res[0]);
             });
     }
 
     getBy(prop, value) {
         if (prop in this.refs) {
-            value = this.datastore.key(this.refs[prop], value);
+            value = this.datastore.key(this.refs[prop], idFromString(value));
         }
 
         return this.datastore.createQuery(this.kind)
@@ -97,41 +100,45 @@ class GenericRepo {
         const refs = this.refs;
         const ds = this.datastore;
 
-        const data = _transform(model, (props, value, name) => {
+        const entity = _transform(model, (props, value, name) => {
             // Skip the id property since it's only used in the key for this entity
             if (name !== idProp && this.validProps.has(name)) {
                 const refKind = refs[name];
                 if (refKind) {
                     if (_isArray(value)) {
-                        value = value.map(v => ds.key([refKind, v]));
+                        value = value.map(v => ds.key([refKind, idFromString(v)]));
                     } else {
-                        value = ds.key([refKind, value]);
+                        value = ds.key([refKind, idFromString(value)]);
                     }
                 }
 
-                props.push({
-                    name,
-                    value,
-                    excludeFromIndexes: !indexes.has(name)
-                });
+                if (!_isNil(value)) {
+                    props.push({
+                        name,
+                        value: value,
+                        excludeFromIndexes: !indexes.has(name)
+                    });
+                }
             }
 
             return props;
         }, []);
 
-        return data;
+        log.info({model, entity}, "Converted model to entity.");
+
+        return entity;
     }
 
     entityToModel(entity) {
-        return _transform(entity, (model, value, name) => {
+        const model = _transform(entity, (model, value, name) => {
             if (this.validProps.has(name)) {
                 if (name in this.refs) {
                     log.debug({key: value}, "Transforming foreign key");
 
                     if (_isArray(value)) {
-                        value = value.map(v => v.path[1]);
+                        value = value.map(v => idToString(v.path[1]));
                     } else {
-                        value = value.path[1];
+                        value = idToString(value.path[1]);
                     }
                 }
 
@@ -140,8 +147,12 @@ class GenericRepo {
 
             return model;
         }, {
-            [this.idProp]: entity[this.datastore.KEY].path[1]
+            [this.idProp]: idToString(entity[this.datastore.KEY].path[1])
         });
+
+        log.info({model, entity}, "Converted entity to model.");
+
+        return model;
     }
 }
 
