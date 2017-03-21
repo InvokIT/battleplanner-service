@@ -1,1 +1,1 @@
-module.exports = require("../google/repos/config");
+module.exports = require("../amazon/repos/config");

@@ -14,10 +14,7 @@ describe("util/jwt", () => {
             id: uuid(),
             displayName: "test-user",
             avatarUrl: "http://example.com",
-            steam: {
-                id: uuid(),
-                identifier: uuid()
-            }
+            steamId: uuid()
         };
     });
 
@@ -38,13 +35,7 @@ describe("util/jwt", () => {
         it("should include steamId in jwt", () => {
             const jwt = createJwtForUser(user);
             const decodedPayload = JSON.parse(base64.decode(jwt.split(".")[1]));
-            expect(decodedPayload.steamId).to.equal(user.steam.id);
-        });
-
-        it("should include steam identifier in jwt", () => {
-            const jwt = createJwtForUser(user);
-            const decodedPayload = JSON.parse(base64.decode(jwt.split(".")[1]));
-            expect(decodedPayload.steamIdentifier).to.equal(user.steam.identifier);
+            expect(decodedPayload.steamId).to.equal(user.steamId);
         });
 
         it("should include avatarUrl in jwt", () => {
