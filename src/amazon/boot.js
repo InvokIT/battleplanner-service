@@ -1,7 +1,6 @@
-const log = require("bunyan").createLogger({name: "amazon/etc"});
+const log = require("bunyan").createLogger({name: "amazon/boot"});
 const AWS = require("./aws");
 
-const files = new Map();
 const PRIVATE_KEY = "private_key.pem";
 const PUBLIC_KEY = "public_key.pem";
 
@@ -18,7 +17,6 @@ const getFile = (filename) => {
             } else {
                 log.info({filename}, "Fetched file from S3.");
                 const body = data.Body;
-                files.set(filename, body);
 
                 resolve(body);
             }
