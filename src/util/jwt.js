@@ -1,8 +1,9 @@
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const path = require("path");
-const privateKey = fs.readFileSync(path.join(__dirname, "../ssl/private_key.pem"));
-const publicKey = fs.readFileSync(path.join(__dirname, "../ssl/public_key.pem"));
+const etc = require("../etc");
+const privateKey = require("../etc").privateKey;
+const publicKey = require("../etc").publicKey;
 
 const jwtOptions = {
     algorithm: "RS256",
