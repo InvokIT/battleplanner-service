@@ -2,14 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="347afb2c-948b-4de0-9e6f-472111aa4f4a" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/boot.js" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app.yaml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/etc.js" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/amazon/etc.js" afterPath="$PROJECT_DIR$/src/amazon/boot.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/amazon/repos/config.js" afterPath="$PROJECT_DIR$/src/amazon/repos/config.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/index.js" afterPath="$PROJECT_DIR$/src/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/util/jwt.js" afterPath="$PROJECT_DIR$/src/util/jwt.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/controllers/auth.js" afterPath="$PROJECT_DIR$/src/controllers/auth.js" />
     </list>
     <ignored path="gcs-match-setup-server.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -80,7 +73,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="boot.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="boot.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/amazon/boot.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
@@ -110,11 +103,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="auth.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="auth.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/controllers/auth.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
-              <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+            <state relative-caret-position="252">
+              <caret line="14" column="46" selection-start-line="14" selection-start-column="46" selection-end-line="14" selection-end-column="46" />
               <folding />
             </state>
           </provider>
@@ -169,7 +162,6 @@
         <option value="$PROJECT_DIR$/src/google/repos/match-repo.js" />
         <option value="$PROJECT_DIR$/src/routes/auth.js" />
         <option value="$PROJECT_DIR$/src/util/steam.js" />
-        <option value="$PROJECT_DIR$/src/controllers/auth.js" />
         <option value="$PROJECT_DIR$/src/routes/matches.js" />
         <option value="$PROJECT_DIR$/src/google/repos/generic-repo.js" />
         <option value="$PROJECT_DIR$/app.yaml" />
@@ -194,6 +186,7 @@
         <option value="$PROJECT_DIR$/src/index.js" />
         <option value="$PROJECT_DIR$/src/util/jwt.js" />
         <option value="$PROJECT_DIR$/src/amazon/boot.js" />
+        <option value="$PROJECT_DIR$/src/controllers/auth.js" />
       </list>
     </option>
   </component>
@@ -1054,12 +1047,12 @@
       <workItem from="1489526479307" duration="12912000" />
       <workItem from="1489592142139" duration="1396000" />
       <workItem from="1489593698568" duration="23455000" />
-      <workItem from="1489677220583" duration="72497000" />
+      <workItem from="1489677220583" duration="73078000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="110260000" />
+    <option name="totallyTimeSpent" value="110841000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-3" y="0" width="1926" height="1052" extended-state="6" />
@@ -1485,14 +1478,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/controllers/auth.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="486">
@@ -1513,6 +1498,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="29" selection-start-line="0" selection-start-column="29" selection-end-line="0" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/controllers/auth.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="14" column="46" selection-start-line="14" selection-start-column="46" selection-end-line="14" selection-end-column="46" />
           <folding />
         </state>
       </provider>

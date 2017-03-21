@@ -1,3 +1,4 @@
+const uuid = require("uuid/v4");
 const users = require("../repos/user");
 const createJwtForUser = require("../util/jwt").createJwtForUser;
 const getUserFromJwt = require("../util/jwt").getUserFromJwt;
@@ -11,7 +12,7 @@ module.exports = {
 
         return users.getBySteamId(steamId)
         // Create new user if none found
-            .then(user => user || {})
+            .then(user => user || { id:uuid() })
             // Update profile data
             .then(user => updateUserFromSteamProfile(user, steamProfile))
             .then(user => users.save(user))
