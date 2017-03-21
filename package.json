@@ -6,20 +6,19 @@
   "license": "MIT",
   "scripts": {
     "start": "node ./src/index.js",
-    "dev": "NODE_ENV=TEST mocha --growl --watch --harmony $(find ./src -name *.test.js)",
-    "test": "mocha --harmony $(find ./src -name *.test.js)",
-    "debug": "NODE_ENV=debug STEAM_REALM=http://localhost:8080/ STEAM_KEY=3B744B4BC6D71C4AF0358BA3DBD39A6B PROJECT_ID=battleplanner-162115 REPLAY_BUCKET_NAME=replays-battleplanner-dev node ./src/index.js"
+    "dev": "NODE_ENV=TEST mocha --growl --watch --harmony --require ./src/test-setup $(find ./src -name *.test.js)",
+    "test": "mocha --harmony --require ./src/test-setup $(find ./src -name *.test.js)"
   },
   "engines": {
     "node": "7.7.2"
   },
   "dependencies": {
+    "aws-sdk": "^2.29.0",
     "body-parser": "^1.17.1",
     "bunyan": "^1.8.8",
     "cors": "^2.8.1",
     "express": "^4.15.2",
     "fast-crc32c": "^1.0.4",
-    "google-cloud": "^0.49.0",
     "jsonwebtoken": "^7.3.0",
     "lodash": "^4.17.4",
     "moment": "^2.18.0",
@@ -32,6 +31,7 @@
   "devDependencies": {
     "base-64": "^0.1.0",
     "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
     "mocha": "^3.2.0",
     "sinon": "^2.0.0"
   }
