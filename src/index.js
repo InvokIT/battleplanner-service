@@ -8,8 +8,9 @@ const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 const authController = require('./controllers/auth');
 const jwtOptions = require("./util/jwt").options;
+const boot = require("./boot");
 
-const log = bunyan.createLogger({name: "app"});
+const log = bunyan.createLogger({name: "index"});
 
 const debug = process.env.NODE_ENV !== "production";
 
@@ -22,47 +23,51 @@ const cfg = {
     clientOrigin: process.env.CLIENT_ORIGIN || 'http://localhost:3000'
 };
 
-passport.use(new SteamStrategy({
-    returnURL: `${cfg.publicOrigin}/auth/steam/return`,
-    realm: cfg.steamRealm,
-    apiKey: cfg.steamKey
-}, (identifier, profile, done) => {
+boot().then(() => {
+    passport.use(new SteamStrategy({
+        returnURL: `${cfg.publicOrigin}/auth/steam/return`,
+        realm: cfg.steamRealm,
+        apiKey: cfg.steamKey
+    }, (identifier, profile, done) => {
 
-    profile.identifier = identifier;
+        profile.identifier = identifier;
 
-    authController.validateSteamProfile(profile)
-        .then(jwt => done(null, jwt), done);
-}));
+        authController.validateSteamProfile(profile)
+            .then(jwt => done(null, jwt), done);
+    }));
 
-passport.use(new JwtStrategy({
-    secretOrKey: require("./util/jwt").key,
-    jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme("Bearer"),
-    issuer: jwtOptions.issuer,
-    algorithms: jwtOptions.algorithms,
-    audience: jwtOptions.audience,
+    passport.use(new JwtStrategy({
+        secretOrKey: require("./util/jwt").getPublicKey(),
+        jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme("Bearer"),
+        issuer: jwtOptions.issuer,
+        algorithms: jwtOptions.algorithms,
+        audience: jwtOptions.audience,
 
-}, (jwtPayload, done) => {
-    const userId = jwtPayload.sub;
-    done(null, userId);
-}));
+    }, (jwtPayload, done) => {
+        const userId = jwtPayload.sub;
+        done(null, userId);
+    }));
 
-const app = express();
+    const app = express();
 
-app.set('trust proxy', true);
-app.set('views', path.join(__dirname, './views'));
-app.set('view engine', 'pug');
+    app.set('trust proxy', true);
+    app.set('views', path.join(__dirname, './views'));
+    app.set('view engine', 'pug');
 
-app.use(bodyParser.json());
-app.use(passport.initialize());
-app.use(require("cors")({
-    origin: cfg.clientOrigin
-}));
+    app.use(bodyParser.json());
+    app.use(passport.initialize());
+    app.use(require("cors")({
+        origin: cfg.clientOrigin
+    }));
 
-app.get("/_ah/health", (req, res) => res.sendStatus(200));
+    app.get("/_ah/health", (req, res) => res.sendStatus(200));
 
-app.use("/auth", require("./routes/auth"));
-app.use("/matches", require("./routes/matches"));
+    app.use("/auth", require("./routes/auth"));
+    app.use("/matches", require("./routes/matches"));
 
-app.listen(cfg.hostPort);
+    app.listen(cfg.hostPort);
 
-log.info({config: cfg}, "App started.");
+    log.info({config: cfg}, "App started.");
+}).catch(err => {
+    log.error(err);
+});

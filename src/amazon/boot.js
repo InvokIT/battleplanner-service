@@ -1,3 +1,4 @@
+const log = require("bunyan").createLogger({name: "amazon/etc"});
 const AWS = require("./aws");
 
 const files = new Map();
@@ -12,8 +13,10 @@ const getFile = (filename) => {
             Key: filename
         }, (err, data) => {
             if (err) {
+                log.warn(err);
                 reject(err);
             } else {
+                log.info({filename}, "Fetched file from S3.");
                 const body = data.Body;
                 files.set(filename, body);
 
@@ -23,17 +26,13 @@ const getFile = (filename) => {
     });
 };
 
-Promise.all([
-    getFile(PRIVATE_KEY),
-    getFile(PUBLIC_KEY)
-]).then(() => {}, (err) => {});
 
 module.exports = {
-    get privateKey() {
-        return files.get(PRIVATE_KEY);
+    getPrivateKey() {
+        return getFile(PRIVATE_KEY);
     },
 
-    get publicKey() {
-        return files.get(PUBLIC_KEY);
+    getPublicKey() {
+        return getFile(PUBLIC_KEY);
     }
 };

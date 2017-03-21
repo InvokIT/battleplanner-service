@@ -1,4 +1,4 @@
-const AWS = require("./aws");
+const AWS = require("../aws");
 
 const documentClient = new AWS.DynamoDB.DocumentClient();
 const s3 = new AWS.S3();
