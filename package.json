@@ -11,7 +11,7 @@
     "debug": "NODE_ENV=debug STEAM_REALM=http://localhost:8080/ STEAM_KEY=3B744B4BC6D71C4AF0358BA3DBD39A6B PROJECT_ID=battleplanner-162115 REPLAY_BUCKET_NAME=replays-battleplanner-dev node ./src/index.js"
   },
   "engines": {
-    "node": "6.10.0"
+    "node": "7.7.2"
   },
   "dependencies": {
     "body-parser": "^1.17.1",

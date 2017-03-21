@@ -1,4 +1,4 @@
-FROM node:6.10
+FROM node:7.7
 
 RUN apt-get update && apt-get install -y curl apt-transport-https && \
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
