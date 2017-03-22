@@ -12,5 +12,10 @@ module.exports = {
     replay: new (require("./replay-repo"))({
         s3,
         bucket: process.env.AWS_S3_BUCKET_REPLAYS
+    }),
+    match: new (require("./match-repo"))({
+        documentClient,
+        table: process.env.AWS_DYNAMODB_TABLE_MATCH,
+        historyTable: process.env.AWS_DYNAMODB_TABLE_MATCHHISTORY
     })
 };

@@ -1,8 +1,8 @@
-const uuid = require("uuid/v4");
 const users = require("../repos/user");
 const createJwtForUser = require("../util/jwt").createJwtForUser;
-const getUserFromJwt = require("../util/jwt").getUserFromJwt;
+const getUserFromJwtPayload = require("../util/jwt").getUserFromJwtPayload;
 const updateUserFromSteamProfile = require("../util/steam").updateUserFromSteamProfile;
+const User = require("../models/user");
 
 module.exports = {
 
@@ -12,15 +12,15 @@ module.exports = {
 
         return users.getBySteamId(steamId)
         // Create new user if none found
-            .then(user => user || { id:uuid() })
+            .then(user => user || new User())
             // Update profile data
             .then(user => updateUserFromSteamProfile(user, steamProfile))
             .then(user => users.save(user))
             .then(createJwtForUser);
     },
 
-    validateJwt(jwt) {
-        return getUserFromJwt(jwt);
+    getUserFromJwtPayload(jwtPayload) {
+        return getUserFromJwtPayload(jwtPayload);
     }
 
 };

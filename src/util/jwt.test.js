@@ -2,20 +2,26 @@ const uuid = require("uuid/v4");
 const expect = require("chai").expect;
 const base64 = require("base-64");
 const _ = require("lodash");
-
+const User = require("../models/user");
 const createJwtForUser = require("./jwt").createJwtForUser;
+const fs = require("fs");
+const path = require("path");
+
+require("./jwt").setKeys(
+    fs.readFileSync(path.join(__dirname, "../ssl/private_key.pem")),
+    fs.readFileSync(path.join(__dirname, "../ssl/public_key.pem"))
+);
 
 describe("util/jwt", () => {
 
     let user;
 
     beforeEach(() => {
-        user = {
-            id: uuid(),
+        user = new User({
             displayName: "test-user",
             avatarUrl: "http://example.com",
             steamId: uuid()
-        };
+        });
     });
 
     describe("createJwtForUser", () => {
@@ -57,31 +63,17 @@ describe("util/jwt", () => {
 
     });
 
-    describe("validateJwt", () => {
+    describe("getUserFromJwtPayload", () => {
 
-        const validateJwt = require("./jwt").validateJwt;
+        const getUserFromJwtPayload = require("./jwt").getUserFromJwtPayload;
 
-        let jwt;
-
-        beforeEach(() => {
-            jwt = createJwtForUser(user);
-        });
-
-        it("should throw on a tampered jwt", () => {
+        it("should return instance of user in jwtPayload", () => {
+            const jwt = createJwtForUser(user);
             const jwtParts = jwt.split(".");
 
             const decodedPayload = JSON.parse(base64.decode(jwtParts[1]));
-            decodedPayload.sub = uuid();
 
-            jwtParts[1] = base64.encode(JSON.stringify(decodedPayload));
-
-            const tamperedJwt = jwtParts.join(".");
-
-            expect(() => validateJwt(tamperedJwt)).to.throw;
-        });
-
-        it("should return user id of user in token", () => {
-            expect(validateJwt(jwt)).to.equal(user.id);
+            expect(getUserFromJwtPayload(decodedPayload)).to.eql(user);
         });
     });
 

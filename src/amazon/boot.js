@@ -1,4 +1,4 @@
-const log = require("bunyan").createLogger({name: "amazon/boot"});
+const log = require("../log")("amazon/boot");
 const AWS = require("./aws");
 
 const PRIVATE_KEY = "private_key.pem";

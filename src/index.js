@@ -1,5 +1,4 @@
 const path = require("path");
-const bunyan = require('bunyan');
 const express = require('express');
 const bodyParser = require('body-parser');
 const passport = require('passport');
@@ -9,10 +8,7 @@ const ExtractJwt = require("passport-jwt").ExtractJwt;
 const authController = require('./controllers/auth');
 const jwtOptions = require("./util/jwt").options;
 const boot = require("./boot");
-
-const log = bunyan.createLogger({name: "index"});
-
-const debug = process.env.NODE_ENV !== "production";
+const log = require("./log")("index");
 
 const port = process.env.PORT || 8080;
 const cfg = {
@@ -44,8 +40,8 @@ boot().then(() => {
         audience: jwtOptions.audience,
 
     }, (jwtPayload, done) => {
-        const userId = jwtPayload.sub;
-        done(null, userId);
+        const user = authController.getUserFromJwtPayload(jwtPayload);
+        done(null, user);
     }));
 
     const app = express();
@@ -64,6 +60,7 @@ boot().then(() => {
 
     app.use("/auth", require("./routes/auth"));
     app.use("/matches", require("./routes/matches"));
+    app.use("/users", require("./routes/users"));
 
     app.listen(cfg.hostPort);
 

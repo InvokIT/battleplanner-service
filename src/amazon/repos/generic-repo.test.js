@@ -18,7 +18,13 @@ const mockDocumentClient = () => {
     };
 };
 
-describe("amazon/repos/dynamodb/generic-repo", () => {
+class Model {
+    constructor(props) {
+        Object.assign(this, props);
+    }
+}
+
+describe("amazon/repos/generic-repo", () => {
 
     let repo;
     let dc;
@@ -29,6 +35,7 @@ describe("amazon/repos/dynamodb/generic-repo", () => {
             documentClient: dc,
             table: "Test",
             defaults: {def1: 10, def2: () => "from fn"},
+            model: Model
         });
     });
 

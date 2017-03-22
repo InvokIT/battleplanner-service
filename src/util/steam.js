@@ -1,4 +1,4 @@
-const log = require('bunyan').createLogger({name: "util/steam"});
+const log = require('../log')("util/steam");
 const _tail = require("lodash/tail");
 
 const updateUserFromSteamProfile = (user, steamProfile) => {
