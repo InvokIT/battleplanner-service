@@ -18,7 +18,7 @@ const matchController = require("../controllers/match");
 router.use(passport.authenticate("jwt", {session: false}));
 
 router.post(
-    "/create",
+    "/",
     // isMatchAdmin,
     (req, res) => {
         const matchArgs = req.body;

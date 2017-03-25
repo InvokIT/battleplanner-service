@@ -31,7 +31,7 @@ describe("amazon/repos/match-repo", () => {
                 done(null, {});
             });
 
-            return repo.save(new (repo.modelClass)({active: true}));
+            return repo.save(new (repo.modelClass)({active: true, owner: "test-user"}));
         });
 
         it("should delete from 'table' if not active", () => {
@@ -40,7 +40,7 @@ describe("amazon/repos/match-repo", () => {
                 done(null, {});
             });
 
-            return repo.save(new (repo.modelClass)({active: false}));
+            return repo.save(new (repo.modelClass)({active: false, owner: "test-user"}));
         });
 
         it("should delete from 'historyTable' if active", () => {
@@ -49,7 +49,7 @@ describe("amazon/repos/match-repo", () => {
                 done(null, {});
             });
 
-            return repo.save(new (repo.modelClass)({active: true}));
+            return repo.save(new (repo.modelClass)({active: true, owner: "test-user"}));
         });
 
         it("should put to 'historyTable' if not active", () => {
@@ -58,7 +58,7 @@ describe("amazon/repos/match-repo", () => {
                 done(null, {});
             });
 
-            return repo.save(new (repo.modelClass)({active: false}));
+            return repo.save(new (repo.modelClass)({active: false, owner: "test-user"}));
         });
 
     });
@@ -81,11 +81,19 @@ describe("amazon/repos/match-repo", () => {
             dc.batchGet = sinon.stub().yields(null, {
                 Responses: {
                     [repo.table]: [],
-                    [repo.historyTable]: [key]
+                    [repo.historyTable]: [
+                        Object.assign({
+                            owner: "test-user"
+                        }, key)
+                    ]
                 }
             });
 
-            return expect(repo.get(key)).to.eventually.eql(new (repo.modelClass)(key));
+            return expect(repo.get(key)).to.eventually.eql(new (repo.modelClass)(
+                Object.assign({
+                    owner: "test-user"
+                }, key)
+            ));
         });
     });
 

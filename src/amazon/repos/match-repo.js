@@ -11,6 +11,7 @@ const pick = require("lodash/fp/pick");
 const moment = require("moment");
 const GenericRepo = require("./generic-repo");
 const Match = require("../../models/match");
+const log = require("../../log")("amazon/repos/match-repo");
 
 class MatchRepo extends GenericRepo {
     constructor(options) {
@@ -83,8 +84,10 @@ class MatchRepo extends GenericRepo {
 
             series([put, remove], (err) => {
                 if (err) {
+                    log.error(err);
                     reject(err);
                 } else {
+                    log.debug({match}, "Saved match");
                     resolve(match);
                 }
             });
@@ -112,7 +115,10 @@ class MatchRepo extends GenericRepo {
             retry(this.retries, (done) => {
                 this.documentClient.scan({
                     TableName: this.table,
-                    FilterExpression: "players CONTAINS :playerId",
+                    FilterExpression: "#owner = :playerId OR contains(players, :playerId)",
+                    ExpressionAttributeNames: {
+                        "#owner": "owner"
+                    },
                     ExpressionAttributeValues: {
                         ":playerId": playerId
                     }
