@@ -4,7 +4,7 @@ const router = express.Router();
 const httpStatus = require("http-status");
 const log = require("../log")("routes/matches");
 const matchController = require("../controllers/match");
-
+const matchLobbyController = require("../controllers/match-lobby");
 
 // const isMatchAdmin = (req, res, next) => {
 //     if (!req.user.roles.includes("matchAdmin")) {
@@ -62,6 +62,16 @@ router.get(
                 log.error(err);
                 res.sendStatus(500);
             });
+    }
+);
+
+router.ws(
+    "/:matchId",
+    (ws, req) => {
+        const matchId = req.params.matchId;
+        const user = req.user;
+        ws.on("connection", (socket) => matchLobbyController(matchId).playerConnected(user, socket));
+        ws.on("error", err => log.error(err));
     }
 );
 

@@ -45,6 +45,7 @@ boot().then(() => {
     }));
 
     const app = express();
+    require('express-ws')(app);
 
     app.set('trust proxy', true);
     app.set('views', path.join(__dirname, './views'));
