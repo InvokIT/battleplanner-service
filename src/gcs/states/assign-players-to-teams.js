@@ -1,10 +1,11 @@
 const flow = require("lodash/fp/flow");
+const every = require("lodash/fp/every");
 const log = require("../../log")(__filename);
 const ChooseInitiator = require("./choose-initiator");
 const {updateTeamPlayerSlot} = require("./state-util");
 
 function allTeamsHasPlayers(data) {
-    return data.get("teams").every(t => t.size > 0);
+    return every(t => t.length > 0)(data.teams);
 }
 
 class AssignPlayersToTeams {
