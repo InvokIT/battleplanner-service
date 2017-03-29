@@ -7,19 +7,17 @@ const every = require("lodash/fp/every");
 const isInteger = require("lodash/fp/isInteger");
 const isString = require("lodash/fp/isString");
 const log = require("../../log")(__filename);
-const SelectMapOrFaction = require("./select-map-or-faction");
-const SelectFaction = require("./select-faction");
 const {setWinner, setReplayUploaded, nextRound} = require("./state-util");
-
-
-console.log("SelectMapOrFaction = " + typeof SelectMapOrFaction);
 
 function hasAllPlayersUploadedReplay(data) {
     const currentRound = data.currentRound;
     return flow(
         get("teams"),
         flatten,
-        every(pId => get(`rounds[${currentRound}].replays[${pId}]`, data) === 1)
+        every(pId => {
+            const replayProgress = get(`rounds[${currentRound}].replayUploaded[${pId}]`, data);
+            return replayProgress === 1;
+        })
     )(data);
 }
 
@@ -36,8 +34,12 @@ function roundHasMap(data) {
     return flow(
         get(`rounds[${currentRound}].map`),
         isString
-    ) (data);
+    )(data);
 }
+
+const isValidTeam = (winnerTeam, data) => winnerTeam >= 0 && winnerTeam < data.teams.length;
+
+const isValidVictoryPoints = (victoryPoints) => victoryPoints > 0 && victoryPoints <= 500;
 
 class PostResultAndReplays {
     constructor(data) {
@@ -45,6 +47,16 @@ class PostResultAndReplays {
     }
 
     setResult({winnerTeam, winnerVictoryPoints, user}) {
+        if (!isValidTeam(winnerTeam, this.data)) {
+            log.error({winnerTeam, winnerVictoryPoints, user}, "Invalid winnerTeam value.");
+            throw new Error("Invalid winnerTeam value");
+        }
+
+        if (!isValidVictoryPoints(winnerVictoryPoints)) {
+            log.error({winnerTeam, winnerVictoryPoints, user}, "Invalid winnerVictoryPoints value.");
+            throw new Error("Invalid winnerVictoryPoints value");
+        }
+
         this.data = setWinner(winnerTeam, winnerVictoryPoints, this.data);
         const nextState = this.nextState();
 
@@ -69,17 +81,26 @@ class PostResultAndReplays {
     }
 
     nextState() {
+        let nextStateName;
+        let data = this.data;
         if (hasAllPlayersUploadedReplay(this.data) && hasWinnerBeenSet(this.data)) {
-            const data = nextRound(this.data);
+            data = nextRound(this.data);
+
             if (roundHasMap(data)) {
-                return new SelectFaction(cloneDeep(data));
+                nextStateName = "select-faction";
             } else {
-                return new SelectMapOrFaction(cloneDeep(data));
+                nextStateName = "select-map-or-faction";
             }
             // TODO What if there is no more rounds?
+
         } else {
-            return this;
+            nextStateName = "post-result-and-replays";
         }
+
+        return {
+            name: nextStateName,
+            data: cloneDeep(data)
+        };
     }
 }
 

@@ -139,7 +139,7 @@ module.exports = {
         log.trace({userId, value, stateData}, "setReplayUploaded");
 
         const currentRound = stateData.currentRound;
-        return set(`rounds[${currentRound}].replays[${userId}]`, value)(stateData);
+        return set(`rounds[${currentRound}].replayUploaded[${userId}]`, value)(stateData);
     },
 
     nextRound(stateData) {

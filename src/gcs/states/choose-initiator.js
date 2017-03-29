@@ -2,7 +2,6 @@ const cloneDeep = require("lodash/fp/cloneDeep");
 const isNumber = require("lodash/fp/isNumber");
 const flow = require("lodash/fp/flow");
 const log = require("../../log")(__filename);
-const SelectMapOrFaction = require("./select-map-or-faction");
 const {setInitiator, setCurrentTeam} = require("./state-util");
 
 class ChooseInitiator {
@@ -18,13 +17,14 @@ class ChooseInitiator {
             throw Error("team is not a number");
         }
 
-        const nextState = new SelectMapOrFaction(
-            flow(
+        const nextState = {
+            name: "select-map-or-faction",
+            data: flow(
                 cloneDeep,
                 setInitiator(team),
                 setCurrentTeam(team)
             )(this.data)
-        );
+        };
 
         log.info({team, user, nextState}, "User chose initiating team.");
 

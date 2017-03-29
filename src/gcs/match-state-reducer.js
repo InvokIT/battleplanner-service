@@ -1,6 +1,15 @@
 const camelCase = require("lodash/fp/camelcase");
 const reduce = require("lodash/fp/reduce");
-const AssignPlayersToTeams = require("./states/assign-players-to-teams");
+
+const stateClasses = {
+    "assign-players-to-teams": require("./states/assign-players-to-teams"),
+    "choose-initiator": require("./states/choose-initiator"),
+    "play-game": require("./states/play-game"),
+    "post-result-and-replays": require("./states/post-result-and-replays"),
+    "select-faction": require("./states/select-faction"),
+    "select-map": require("./states/select-map"),
+    "select-map-or-faction": require("./states/select-map-or-faction")
+};
 
 const applyStateChange = (state, stateChange) => {
     const stateChangeName = camelCase(stateChange.name);
@@ -9,23 +18,22 @@ const applyStateChange = (state, stateChange) => {
         throw new Error(`stateChangeName is not a string.`);
     }
 
-    if (!isFunction(state[stateChangeName])) {
-        throw new Error(`Unknown state-change ${stateChangeName} for state '${state.constructor.name}'`);
+    const stateInstance = new (stateClasses[state.name])(state.data);
+
+    if (!isFunction(stateInstance[stateChangeName])) {
+        throw new Error(`Unknown state-change ${stateChangeName} for state '${state.name}'`);
     }
 
-    return state[stateChangeName].call(state, stateChange.params);
+    return stateInstance[stateChangeName].call(stateInstance, stateChange.params);
 };
 
-const defaultState = new AssignPlayersToTeams(require("./states/state-util").defaultStateData);
+const defaultState = {
+    name: "assign-players-to-teams",
+    data: require("./states/state-util").defaultStateData
+};
 
-const reduceStateChanges = reduce(applyStateChange, defaultState);
+const reduceStateChanges = (stateChanges, state = defaultState) => reduce(applyStateChange, state)(stateChanges);
 
-module.exports = (stateChanges) => {
-    const state = reduceStateChanges(stateChanges);
-    return Object.assign(
-        {
-            name: state.constructor.name
-        },
-        state.data.toJS()
-    );
+module.exports = (stateChanges, state) => {
+    return reduceStateChanges(stateChanges, state);
 };

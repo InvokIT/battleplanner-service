@@ -2,7 +2,6 @@ const flow = require("lodash/fp/flow");
 const cloneDeep = require("lodash/fp/cloneDeep");
 const every = require("lodash/fp/every");
 const log = require("../../log")(__filename);
-const ChooseInitiator = require("./choose-initiator");
 const {updateTeamPlayerSlot} = require("./state-util");
 
 function allTeamsHasPlayers(data) {
@@ -17,12 +16,13 @@ class AssignPlayersToTeams {
     updateTeamPlayerSlot({team, teamSlot, playerId, user}) {
         log.info({team, playerId, user}, "User assigned player to team.");
 
-        return new AssignPlayersToTeams(
-            flow(
+        return {
+            name: "assign-players-to-teams",
+            data: flow(
                 cloneDeep,
                 updateTeamPlayerSlot(team, teamSlot, playerId)
             )(this.data)
-        );
+        };
     }
 
     teamsComplete({user}) {
@@ -32,7 +32,10 @@ class AssignPlayersToTeams {
         }
 
         log.info({user}, "User completed team assignment.");
-        return new ChooseInitiator(cloneDeep(this.data));
+        return {
+            name: "choose-initiator",
+            data: cloneDeep(this.data)
+        };
     }
 }
 

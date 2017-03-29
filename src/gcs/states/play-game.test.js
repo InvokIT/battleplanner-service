@@ -1,6 +1,5 @@
 const flow = require("lodash/fp/flow");
 const cloneDeep = require("lodash/fp/cloneDeep");
-const PostResultAndReplays = require("./post-result-and-replays");
 const defaultStateData = require("./state-util").defaultStateData;
 const PlayGame = require("./play-game");
 
@@ -17,7 +16,7 @@ describe("PlayGame", () => {
     describe("gamePlayed", () => {
 
         it("should return the next state, PostResultAndReplays", () => {
-            expect(state.gamePlayed({user})).to.be.an.instanceof(PostResultAndReplays);
+            expect(state.gamePlayed({user})).to.have.property("name", "post-result-and-replays");
         });
 
     });

@@ -1,12 +1,24 @@
 const cloneDeep = require("lodash/fp/cloneDeep");
 const flow = require("lodash/fp/flow");
-const isNil = require("lodash/fp/isNil");
+const get = require("lodash/fp/get");
+const flatten = require("lodash/fp/flatten");
+const every = require("lodash/fp/every");
+const isString = require("lodash/fp/isString");
 const log = require("../../log")(__filename);
-const PlayGame = require("./play-game");
 const {nextTeam, setFaction} = require("./state-util");
 
 const hasAllPlayersChosenFaction = (stateData) => {
-    return stateData.get("teams").every(t => t.every(p => !isNil(p.faction)));
+    const currentRound = stateData.currentRound;
+    return flow(
+        get("teams"),
+        flatten,
+        every(pId =>
+            flow(
+                get(`rounds[${currentRound}].factions[${pId}]`),
+                isString
+            )(stateData)
+        )
+    )(stateData);
 };
 
 class SelectFaction {
@@ -15,22 +27,27 @@ class SelectFaction {
     }
 
     selectFaction({faction, user}) {
-        // const newStateData = flow(
-        //     cloneDeep,
-        //     setFaction(user.id, faction), nextTeam
-        // )(this.data);
-        //
-        // let nextState;
-        //
-        // if (hasAllPlayersChosenFaction(newStateData)) {
-        //     nextState = new PlayGame(newStateData);
-        // } else {
-        //     nextState = new SelectFaction(newStateData);
-        // }
-        //
-        // log.info({nextState, user}, "User selected faction");
-        //
-        // return nextState;
+        if (!isString(faction)) {
+            log.error({faction, user}, "faction is not a string");
+            throw new Error("faction is not a string");
+        }
+
+        const newStateData = flow(
+            cloneDeep,
+            setFaction(user.id, faction), nextTeam
+        )(this.data);
+
+        let nextState;
+
+        if (hasAllPlayersChosenFaction(newStateData)) {
+            nextState = {name: "play-game", data: newStateData};
+        } else {
+            nextState = {name: "select-faction", data: newStateData};
+        }
+
+        log.info({nextState, user}, "User selected faction");
+
+        return nextState;
     }
 }
 

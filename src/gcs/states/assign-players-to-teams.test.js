@@ -3,7 +3,6 @@ const flow = require("lodash/fp/flow");
 const set = require("lodash/fp/set");
 const AssignPlayersToTeams = require("./assign-players-to-teams");
 const defaultStateData = require("./state-util").defaultStateData;
-const ChooseInitiator = require("./choose-initiator");
 
 const user = {id: "test-user"};
 
@@ -86,7 +85,7 @@ describe("AssignPlayersToTeams", () => {
                 )(defaultStateData)
             );
 
-            expect(state.teamsComplete({user})).to.be.an.instanceof(ChooseInitiator);
+            expect(state.teamsComplete({user})).to.have.property("name", "choose-initiator");
         });
 
         it("should pass current state data to next state", () => {

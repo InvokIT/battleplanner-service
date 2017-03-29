@@ -1,6 +1,12 @@
 const bunyan = require("bunyan");
 
-const defaultLevel = process.env.NODE_ENV === "production" ? "info" : "trace";
+const envLevels = {
+    "production": "info",
+    "test": "info",
+    "debug": "trace"
+};
+
+const defaultLevel = process.env.NODE_ENV in envLevels ? envLevels[process.env.NODE_ENV] : "info";
 
 const rootLogger = bunyan.createLogger({
     name: "app",

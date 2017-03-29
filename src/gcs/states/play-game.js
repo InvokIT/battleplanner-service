@@ -1,6 +1,5 @@
 const cloneDeep = require("lodash/fp/cloneDeep");
 const log = require("../../log")(__filename);
-const PostResultAndReplays = require("./post-result-and-replays");
 
 class PlayGame {
     constructor(data) {
@@ -8,7 +7,10 @@ class PlayGame {
     }
 
     gamePlayed({user}) {
-        const nextState = new PostResultAndReplays(cloneDeep(this.data));
+        const nextState = {
+            name: "post-result-and-replays",
+            data: cloneDeep(this.data)
+        };
 
         log.info({nextState, user}, "User said game has been played");
 

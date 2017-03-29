@@ -1,7 +1,6 @@
 const flow = require("lodash/fp/flow");
 const set = require("lodash/fp/set");
 const cloneDeep = require("lodash/fp/cloneDeep");
-const SelectMapOrFaction = require("./select-map-or-faction");
 const defaultStateData = require("./state-util").defaultStateData;
 const ChooseInitiator = require("./choose-initiator");
 
@@ -46,7 +45,7 @@ describe("ChooseInitiator", () => {
         });
 
         it("should return the next state, SelectMapOrFaction", () => {
-            return expect(state.chooseInitiator({team: 0, user})).to.be.an.instanceof(SelectMapOrFaction);
+            return expect(state.chooseInitiator({team: 0, user})).to.have.property("name", "select-map-or-faction");
         });
 
     });

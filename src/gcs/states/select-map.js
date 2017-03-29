@@ -1,7 +1,7 @@
 const log = require("../../log")(__filename);
+const isString = require("lodash/fp/isString");
 const flow = require("lodash/fp/flow");
 const cloneDeep = require("lodash/fp/cloneDeep");
-const SelectFaction = require("./select-faction");
 const {setMap} = require("./state-util");
 
 class SelectMap {
@@ -10,12 +10,19 @@ class SelectMap {
     }
 
     selectMap({map, user}) {
-        const nextState = new SelectFaction(
-            flow(
+        if (!isString(map)) {
+            log.error({map, user}, "map is not a string");
+            throw new Error("map is not a string");
+        }
+
+        const nextState = {
+            name: "select-faction",
+            data: flow(
                 cloneDeep,
                 setMap(map)
             )(this.data)
-        );
+
+        };
 
         log.info({nextState, user}, "User selected map");
 
