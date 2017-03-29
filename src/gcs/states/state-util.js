@@ -2,24 +2,36 @@ const log = require("../../log")(__filename);
 const times = require("lodash/fp/times");
 const flow = require("lodash/fp/flow");
 const set = require("lodash/fp/set");
+const get = require("lodash/fp/get");
+const update = require("lodash/fp/update");
+const reduce = require("lodash/fp/reduce");
 const toNumber = require("lodash/fp/toNumber");
 
 function getRoundInitiator(data) {
-    const currentRound = data.get("currentRound");
-    const roundCount = data.get("rounds").size;
+    const currentRound = data.currentRound;
+    const roundCount = data.rounds.length;
 
     if (currentRound === roundCount - 1) {
         // Final game, choose initiator based on VP count
         return flow(
-            data => data.get("rounds").reduce(
-                (scores, r) => scores.update(r.winner, (v = 0) => v + r.winnerVictoryPoints),
-                immutableMap()
-            ).sort().keySeq().last(),
-            toNumber
+            get("rounds"),
+            reduce((scores, round) => {
+                update(round.winner, (vps = 0) => vps + round.winnerVictoryPoints)(scores);
+            }, {}),
+            reduce((leader, vps, team) => {
+                if (leader.vps > vps) {
+                    return leader;
+                } else if (leader.vps < vps) {
+                    return {team, vps};
+                } else {
+                    return {team: -1, vps};
+                }
+            }, {vps: -1}),
+            get("team")
         )(data);
     } else {
         // Alternating initiator
-        const initiator = data.get("initiator");
+        const initiator = data.initiator;
         return (initiator + currentRound) % 2;
     }
 }
@@ -40,12 +52,20 @@ module.exports = {
     },
 
     updateTeamPlayerSlot(team, teamSlot, playerId, stateData) {
+        if (arguments.length < 4) {
+            return arguments.callee.bind(null, ...arguments);
+        }
+
         log.trace({team, teamSlot, playerId, stateData}, "updateTeamPlayerSlot");
 
         return set(`teams[${team}][${teamSlot}]`, playerId)(stateData);
     },
 
     setFaction(playerId, faction, stateData) {
+        if (arguments.length < 3) {
+            return arguments.callee.bind(null, ...arguments);
+        }
+
         log.trace({playerId, faction, stateData}, "setFaction");
 
         const currentRound = stateData.currentRound;
@@ -54,6 +74,10 @@ module.exports = {
     },
 
     setMap(map, stateData) {
+        if (arguments.length < 2) {
+            return arguments.callee.bind(null, ...arguments);
+        }
+
         log.trace({map, stateData}, "setMap");
 
         const currentRound = stateData.currentRound;
@@ -61,20 +85,43 @@ module.exports = {
     },
 
     nextTeam(stateData) {
+        if (arguments.length < 1) {
+            return arguments.callee.bind(null, ...arguments);
+        }
+
         log.trace({stateData}, "nextTeam");
 
         stateData.currentTeam = (stateData.currentTeam + 1) % 2;
         return stateData;
     },
 
+    setCurrentTeam(team, stateData) {
+        if (arguments.length < 2) {
+            return arguments.callee.bind(null, ...arguments);
+        }
+
+        log.trace({team, stateData}, "setCurrentTeam");
+
+        stateData.currentTeam = team;
+        return stateData;
+    },
+
     setInitiator(initiator, stateData) {
-        log.trace({initiator, stateData}, "setInitiator");
+        if (arguments.length < 2) {
+            return arguments.callee.bind(null, ...arguments);
+        }
+
+        log.trace({initiator, stateData: stateData}, "setInitiator");
 
         stateData.initiator = initiator;
         return stateData;
     },
 
     setWinner(winnerTeam, victoryPoints, stateData) {
+        if (arguments.length < 3) {
+            return arguments.callee.bind(null, ...arguments);
+        }
+
         log.trace({winnerTeam, victoryPoints, stateData}, "setWinner");
 
         const currentRound = stateData.currentRound;
@@ -85,6 +132,10 @@ module.exports = {
     },
 
     setReplayUploaded(userId, value, stateData) {
+        if (arguments.length < 3) {
+            return arguments.callee.bind(null, ...arguments);
+        }
+
         log.trace({userId, value, stateData}, "setReplayUploaded");
 
         const currentRound = stateData.currentRound;
@@ -92,6 +143,10 @@ module.exports = {
     },
 
     nextRound(stateData) {
+        if (arguments.length < 1) {
+            return arguments.callee.bind(null, ...arguments);
+        }
+
         log.trace({stateData}, "nextRound");
 
         const currentRound = stateData.currentRound + 1;

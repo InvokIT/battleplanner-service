@@ -1,3 +1,4 @@
+const cloneDeep = require("lodash/fp/cloneDeep");
 const flow = require("lodash/fp/flow");
 const isNil = require("lodash/fp/isNil");
 const log = require("../../log")(__filename);
@@ -14,18 +15,22 @@ class SelectFaction {
     }
 
     selectFaction({faction, user}) {
-        const newStateData = flow(setFaction(user.id, faction), nextTeam)(this.data);
-        let nextState;
-
-        if (hasAllPlayersChosenFaction(newStateData)) {
-            nextState = new PlayGame(newStateData);
-        } else {
-            nextState = new SelectFaction(newStateData);
-        }
-
-        log.info({nextState, user}, "User selected faction");
-
-        return nextState;
+        // const newStateData = flow(
+        //     cloneDeep,
+        //     setFaction(user.id, faction), nextTeam
+        // )(this.data);
+        //
+        // let nextState;
+        //
+        // if (hasAllPlayersChosenFaction(newStateData)) {
+        //     nextState = new PlayGame(newStateData);
+        // } else {
+        //     nextState = new SelectFaction(newStateData);
+        // }
+        //
+        // log.info({nextState, user}, "User selected faction");
+        //
+        // return nextState;
     }
 }
 

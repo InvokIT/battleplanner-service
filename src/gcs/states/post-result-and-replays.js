@@ -1,25 +1,42 @@
 const isNumber = require("lodash/fp/isNumber");
 const flow = require("lodash/fp/flow");
+const cloneDeep = require("lodash/fp/cloneDeep");
+const get = require("lodash/fp/get");
+const flatten = require("lodash/fp/flatten");
+const every = require("lodash/fp/every");
+const isInteger = require("lodash/fp/isInteger");
+const isString = require("lodash/fp/isString");
 const log = require("../../log")(__filename);
 const SelectMapOrFaction = require("./select-map-or-faction");
 const SelectFaction = require("./select-faction");
 const {setWinner, setReplayUploaded, nextRound} = require("./state-util");
 
+
+console.log("SelectMapOrFaction = " + typeof SelectMapOrFaction);
+
 function hasAllPlayersUploadedReplay(data) {
-    const currentRound = data.get("currentRound");
-    return data.get("teams").flatten().every(
-        pId => data.getIn(["rounds", currentRound, "replays", pId]) === 1
-    );
+    const currentRound = data.currentRound;
+    return flow(
+        get("teams"),
+        flatten,
+        every(pId => get(`rounds[${currentRound}].replays[${pId}]`, data) === 1)
+    )(data);
 }
 
 function hasWinnerBeenSet(data) {
-    const currentRound = data.get("currentRound");
-    return data.getIn(["rounds", currentRound])
+    const currentRound = data.currentRound;
+    return flow(
+        get(`rounds[${currentRound}].winner`),
+        isInteger
+    )(data);
 }
 
 function roundHasMap(data) {
-    const currentRound = data.get("currentRound");
-    return data.getIn(["rounds", currentRound, "map"]) !== null;
+    const currentRound = data.currentRound;
+    return flow(
+        get(`rounds[${currentRound}].map`),
+        isString
+    ) (data);
 }
 
 class PostResultAndReplays {
@@ -33,7 +50,7 @@ class PostResultAndReplays {
 
         log.info({nextState, user}, "User posted result");
 
-        return this.nextState();
+        return nextState;
     }
 
     replayUploadedUpdate({user, value}) {
@@ -48,16 +65,16 @@ class PostResultAndReplays {
 
         log.info({nextState, user, value}, "User updated replay progress");
 
-        return this.nextState();
+        return nextState;
     }
 
     nextState() {
         if (hasAllPlayersUploadedReplay(this.data) && hasWinnerBeenSet(this.data)) {
             const data = nextRound(this.data);
             if (roundHasMap(data)) {
-                return new SelectFaction(data);
+                return new SelectFaction(cloneDeep(data));
             } else {
-                return new SelectMapOrFaction(data);
+                return new SelectMapOrFaction(cloneDeep(data));
             }
             // TODO What if there is no more rounds?
         } else {

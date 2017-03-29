@@ -1,4 +1,5 @@
 const flow = require("lodash/fp/flow");
+const cloneDeep = require("lodash/fp/cloneDeep");
 const log = require("../../log")(__filename);
 const SelectMap = require("./select-map");
 const SelectFaction = require("./select-faction");
@@ -10,9 +11,13 @@ class SelectMapOrFaction {
     }
 
     selectMap({map, user}) {
-        const nextState = new SelectFaction(this.data.withMutations(
-            m => flow(setMap(map), nextTeam)(m)
-        ));
+        const nextState = new SelectFaction(
+            flow(
+                cloneDeep,
+                setMap(map),
+                nextTeam
+            )(this.data)
+        );
 
         log.info({nextState, user}, "User selected map");
 
@@ -20,9 +25,13 @@ class SelectMapOrFaction {
     }
 
     selectFaction({faction, user}) {
-        const nextState = new SelectMap(this.data.withMutations(
-            m => flow(setFaction(user.id, faction), nextTeam)(m)
-        ));
+        const nextState = new SelectMap(
+            flow(
+                cloneDeep,
+                setFaction(user.id, faction),
+                nextTeam
+            )(this.data)
+        );
 
         log.info({nextState, user}, "User selected faction");
 
