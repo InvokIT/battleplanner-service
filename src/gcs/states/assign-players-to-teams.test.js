@@ -46,6 +46,36 @@ describe("AssignPlayersToTeams", () => {
             return expect(nextState).to.have.deep.property("data.teams[0][0]", playerId);
         });
 
+        it("should throw when missing a team param", () => {
+            const state = new AssignPlayersToTeams(
+                flow(
+                    cloneDeep
+                )(defaultStateData)
+            );
+
+            expect(() => state.updateTeamPlayerSlot({teamSlot: 0, playerId: "12345", user})).to.throw();
+        });
+
+        it("should throw when missing a teamSlot param", () => {
+            const state = new AssignPlayersToTeams(
+                flow(
+                    cloneDeep
+                )(defaultStateData)
+            );
+
+            expect(() => state.updateTeamPlayerSlot({team: 0, playerId: "12345", user})).to.throw();
+        });
+
+        it("should throw when missing a playerId param", () => {
+            const state = new AssignPlayersToTeams(
+                flow(
+                    cloneDeep
+                )(defaultStateData)
+            );
+
+            expect(() => state.updateTeamPlayerSlot({team: 0, teamSlot: 0, user})).to.throw();
+        });
+
     });
 
     describe("teamsComplete", () => {

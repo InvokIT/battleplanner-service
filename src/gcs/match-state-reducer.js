@@ -1,5 +1,8 @@
-const camelCase = require("lodash/fp/camelcase");
+const camelCase = require("lodash/fp/camelCase");
+const isString = require("lodash/fp/isString");
+const isFunction = require("lodash/fp/isFunction");
 const reduce = require("lodash/fp/reduce");
+const log = require("../log")(__filename);
 
 const stateClasses = {
     "assign-players-to-teams": require("./states/assign-players-to-teams"),
@@ -12,6 +15,8 @@ const stateClasses = {
 };
 
 const applyStateChange = (state, stateChange) => {
+    log.info({state, stateChange}, "Applying stateChange to state");
+
     const stateChangeName = camelCase(stateChange.name);
 
     if (!isString(stateChangeName)) {

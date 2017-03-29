@@ -1,6 +1,9 @@
 const flow = require("lodash/fp/flow");
 const cloneDeep = require("lodash/fp/cloneDeep");
 const every = require("lodash/fp/every");
+const isNumber = require("lodash/fp/isNumber");
+const isString = require("lodash/fp/isString");
+const isUndefined = require("lodash/fp/isUndefined");
 const log = require("../../log")(__filename);
 const {updateTeamPlayerSlot} = require("./state-util");
 
@@ -14,15 +17,29 @@ class AssignPlayersToTeams {
     }
 
     updateTeamPlayerSlot({team, teamSlot, playerId, user}) {
-        log.info({team, playerId, user}, "User assigned player to team.");
+        if (!isNumber(team)) {
+            throw new Error("Invalid team value.");
+        }
 
-        return {
+        if (!isNumber(teamSlot)) {
+            throw new Error("Invalid teamSlot value.");
+        }
+
+        if (isUndefined(playerId)) {
+            throw new Error("Invalid playerId value.");
+        }
+
+        const nextState =  {
             name: "assign-players-to-teams",
             data: flow(
                 cloneDeep,
                 updateTeamPlayerSlot(team, teamSlot, playerId)
             )(this.data)
         };
+
+        log.info({nextState, team, playerId, user}, "User assigned player to team.");
+
+        return nextState;
     }
 
     teamsComplete({user}) {
