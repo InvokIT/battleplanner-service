@@ -2,7 +2,7 @@ const bunyan = require("bunyan");
 
 const envLevels = {
     "production": "info",
-    "test": "info",
+    "test": 100,
     "debug": "trace"
 };
 

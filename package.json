@@ -6,11 +6,11 @@
   "license": "MIT",
   "scripts": {
     "start": "node ./src/index.js",
-    "dev": "NODE_ENV=TEST mocha --growl --watch --harmony --require ./src/test-setup $(find ./src -name *.test.js)",
+    "dev": "NODE_ENV=test mocha --growl --watch --harmony --require ./src/test-setup $(find ./src -name *.test.js)",
     "test": "mocha --harmony --require ./src/test-setup $(find ./src -name *.test.js)"
   },
   "engines": {
-    "node": "7.7.2"
+    "node": "7.8"
   },
   "dependencies": {
     "async": "^2.1.5",
