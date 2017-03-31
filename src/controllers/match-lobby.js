@@ -3,37 +3,53 @@ const reduce = require("lodash/fp/reduce");
 const remove = require("lodash/fp/remove");
 const isString = require("lodash/fp/isString");
 const defaultTo = require("lodash/fp/defaultTo");
+const cloneDeep = require("lodash/fp/cloneDeep");
 const log = require("../log")("controllers/match-lobby");
-const matches = require("../repos/match");
+const matchStateChangeRepo = require("../repos/match-state-change");
 const matchStateReducer = require("../gcs/match-state-reducer");
+const MatchStateChange = require("../models/match-state-change");
 
 class MatchLobby {
     constructor(matchId) {
         this.matchId = matchId;
         this.players = [];
+        this.matchState = null;
     }
 
     playerConnected(user, socket) {
-        this.players.push({user, socket});
+        const player = {user, socket};
+
+        this.players.push(player);
+
         socket.addEventListener("message", (data, flags) => this.onMessageReceived(user, socket, data));
         socket.addEventListener("close", (code, reason) => this.onPlayerDisconnected(user, socket, code, reason));
         socket.addEventListener("error", error => this.onError(user, socket, error));
+
+        this._sendPlayerListToPlayers();
+
+        this._getMatchState()
+            .then(state => this._sendMatchStateToPlayer(state, player));
     }
 
     onPlayerDisconnected(user, socket, code, reason) {
         // Remove from this.players and log it
         remove(p => p.user.id === user.id, this.players);
-        log.info({player: user}, "Player disconnected");
+        log.info({player: user, code, reason}, "Player disconnected");
     }
 
     onMessageReceived(user, socket, data) {
         const msg = JSON.parse(data);
         switch (msg.type) {
             case "state-change":
-                this.onStateChange(user, socket, {
-                    name: msg.name,
-                    params: defaultTo({}, msg.params)
-                });
+                this.onStateChange(
+                    user,
+                    socket,
+                    new MatchStateChange({
+                        name: msg.name,
+                        params: defaultTo({}, msg.params)
+                    })
+                );
+                break;
             default:
                 log.warn({data}, "Unknown data received");
         }
@@ -46,62 +62,96 @@ class MatchLobby {
     }
 
     onStateChange(user, socket, stateChange) {
-        if (!isString(stateChange.name)) {
-            log.error("stateChange.name not defined");
-            throw new Error("stateChange.name not defined");
+        // Save changes to match-state table
+        return Promise.all([
+            matchStateChangeRepo.save(stateChange),
+            this._getMatchState()
+        ]).then(([, state]) => {
+            stateChange.params.user = user;
+
+            log.debug({stateChange}, "Received state-change");
+
+            const newState = matchStateReducer([stateChange], state);
+            this._setMatchState(newState);
+
+            // TODO Save teams to match table
+            //matchRepo.updateTeamsInMatch()
+            // TODO Add to results match property in table
+            //matchRepo.updateMatchResult
+
+            return this._sendMatchStateToPlayers(newState);
+        });
+
+    }
+
+    _getMatchState() {
+        if (!this.matchState) {
+            // get match state changes, reduce them to a state, store that in this.matchState, and return it
+            this.matchState = matchStateChangeRepo.getByMatchId(this.matchId)
+                .then(stateChanges => matchStateReducer(stateChanges))
         }
 
-        stateChange.params.user = user;
+        return this.matchState;
+    }
 
-        log.debug({stateChange}, "Received state-change");
+    _setMatchState(state) {
+        this.matchState = Promise.resolve(state);
+    }
 
-        return matches.get({id: this.matchId})
-            .then(match => {
-                const stateChanges = match.stateChanges || (match.stateChanges = []);
-                stateChanges.push(stateChange);
-                match.stateChanges = stateChanges;
+    _sendMatchStateToPlayers(matchState) {
+        return Promise.all(this.players.map(
+            p => this._sendMatchStateToPlayer(matchState, p)
+        ));
+    }
 
-                try {
-                    const currentState = matchStateReducer(stateChanges);
-                    log.info({stateChanges, data}, "Reduced stateChanges to state.");
+    _sendMatchStateToPlayer(matchState, player) {
+        return new Promise((resolve, reject) => {
+            const msg = JSON.stringify({
+                type: "match-state-update",
+                matchId: this.matchId,
+                state: matchState
+            });
 
-                    return {match, currentState};
-                } catch (err) {
-                    log.error({
-                        error,
-                        matchId: this.matchId,
-                        stateChanges
-                    }, "Error when applying state-change. State-change ignored.");
-                    throw err;
-                }
-            })
-            .then(({match, currentState}) => {
-                matches.save(match);
-                return currentState;
-            })
-            .then(currentState => {
-                log.info({
-                    matchId: this.matchId,
-                    data: currentState
-                }, "Sending state update for match to players.");
-
-                parallel(this.players.map(p => (done) => p.socket.send(
-                    JSON.stringify({
-                        type: "state-update",
-                        matchId: this.matchId,
-                        data: currentState
-                    }),
-                    done)
-                ), (error) => {
-                    if (error) {
-                        log.error({
+            p.socket.send(msg, (err) => {
+                if (err) {
+                    log.error(
+                        {
                             error,
                             matchId: this.matchId,
-                            data: currentState
-                        }, "Error when sending state update to players.")
-                    }
-                });
+                            user: player.user,
+                            data: msg
+                        },
+                        "Error when sending state update to user."
+                    );
+
+                    reject(err);
+                } else {
+                    resolve();
+                }
             });
+        });
+    }
+
+    _sendPlayerListToPlayers() {
+        const playerList = this.players.map(p => p.user.id);
+
+        return Promise.all(this.players.map(
+            p => new Promise((resolve, reject) => {
+                p.socket.send(
+                    {
+                        type: "players-update",
+                        matchId: this.matchId,
+                        players: playerList
+                    },
+                    (err) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve();
+                        }
+                    });
+            })
+        ));
     }
 }
 

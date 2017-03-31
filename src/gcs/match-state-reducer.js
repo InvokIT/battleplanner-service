@@ -29,7 +29,8 @@ const applyStateChange = (state, stateChange) => {
         throw new Error(`Unknown state-change ${stateChangeName} for state '${state.name}'`);
     }
 
-    return stateInstance[stateChangeName].call(stateInstance, stateChange.params);
+    const newState = stateInstance[stateChangeName].call(stateInstance, stateChange.params);
+    return newState;
 };
 
 const defaultState = {

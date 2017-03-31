@@ -6,6 +6,7 @@ const isString = require("lodash/fp/isString");
 const isUndefined = require("lodash/fp/isUndefined");
 const log = require("../../log")(__filename);
 const {updateTeamPlayerSlot} = require("./state-util");
+const matchRepo = require("../../repos/match");
 
 function allTeamsHasPlayers(data) {
     return every(t => t.length > 0)(data.teams);
@@ -49,6 +50,7 @@ class AssignPlayersToTeams {
         }
 
         log.info({user}, "User completed team assignment.");
+
         return {
             name: "choose-initiator",
             data: cloneDeep(this.data)

@@ -2,15 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="347afb2c-948b-4de0-9e6f-472111aa4f4a" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/amazon/repos/match-state-change-repo.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/models/match-state-change.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/repos/match-state-change.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/amazon/repos/config.js" afterPath="$PROJECT_DIR$/src/amazon/repos/config.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/amazon/repos/generic-repo.js" afterPath="$PROJECT_DIR$/src/amazon/repos/generic-repo.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/amazon/repos/match-repo.js" afterPath="$PROJECT_DIR$/src/amazon/repos/match-repo.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/controllers/match-lobby.js" afterPath="$PROJECT_DIR$/src/controllers/match-lobby.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/log.js" afterPath="$PROJECT_DIR$/src/log.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/models/match.js" afterPath="$PROJECT_DIR$/src/models/match.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/gcs/match-state-reducer.js" afterPath="$PROJECT_DIR$/src/gcs/match-state-reducer.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/gcs/states/assign-players-to-teams.js" afterPath="$PROJECT_DIR$/src/gcs/states/assign-players-to-teams.js" />
     </list>
     <ignored path="gcs-match-setup-server.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -53,8 +49,8 @@
       <file leaf-file-name="assign-players-to-teams.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/gcs/states/assign-players-to-teams.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="5" column="50" lean-forward="false" selection-start-line="5" selection-start-column="50" selection-end-line="5" selection-end-column="50" />
+            <state relative-caret-position="701">
+              <caret line="53" column="0" lean-forward="false" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -63,38 +59,18 @@
       <file leaf-file-name="assign-players-to-teams.test.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/gcs/states/assign-players-to-teams.test.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1156">
+            <state relative-caret-position="888">
               <caret line="68" column="54" lean-forward="false" selection-start-line="68" selection-start-column="54" selection-end-line="68" selection-end-column="54" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="select-map.test.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/gcs/states/select-map.test.js">
+      <file leaf-file-name="match-repo.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/amazon/repos/match-repo.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="10" column="23" lean-forward="false" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="select-faction.test.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/gcs/states/select-faction.test.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1122">
-              <caret line="66" column="7" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="66" selection-end-column="7" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="select-map-or-faction.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/gcs/states/select-map-or-faction.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="561">
-              <caret line="33" column="29" lean-forward="false" selection-start-line="33" selection-start-column="29" selection-end-line="33" selection-end-column="29" />
+            <state relative-caret-position="616">
+              <caret line="159" column="39" lean-forward="false" selection-start-line="159" selection-start-column="39" selection-end-line="159" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -103,14 +79,14 @@
       <file leaf-file-name="match-state-reducer.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/gcs/match-state-reducer.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="612">
-              <caret line="36" column="30" lean-forward="false" selection-start-line="36" selection-start-column="30" selection-end-line="36" selection-end-column="30" />
+            <state relative-caret-position="544">
+              <caret line="32" column="0" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="match-state-change.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="match-state-change.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/models/match-state-change.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
@@ -120,21 +96,41 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="state-util.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/gcs/states/state-util.js">
+      <file leaf-file-name="match-lobby.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/controllers/match-lobby.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="986">
-              <caret line="58" column="0" lean-forward="false" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
+            <state relative-caret-position="697">
+              <caret line="53" column="58" lean-forward="true" selection-start-line="53" selection-start-column="58" selection-end-line="53" selection-end-column="58" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="select-map-or-faction.test.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/gcs/states/select-map-or-faction.test.js">
+      <file leaf-file-name="post-result-and-replays.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/gcs/states/post-result-and-replays.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1683">
-              <caret line="99" column="48" lean-forward="false" selection-start-line="99" selection-start-column="48" selection-end-line="99" selection-end-column="48" />
+            <state relative-caret-position="463">
+              <caret line="64" column="0" lean-forward="false" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="match.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/models/match.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="323">
+              <caret line="19" column="0" lean-forward="true" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="state-util.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/gcs/states/state-util.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="787">
+              <caret line="58" column="0" lean-forward="false" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -184,7 +180,6 @@
         <option value="$PROJECT_DIR$/src/amazon/repos/match-repo.test.js" />
         <option value="internal/process/next_tick.js" />
         <option value="$PROJECT_DIR$/src/controllers/match.js" />
-        <option value="$PROJECT_DIR$/src/amazon/repos/match-repo.js" />
         <option value="$PROJECT_DIR$/src/routes/users.js" />
         <option value="$PROJECT_DIR$/src/index.js" />
         <option value="$PROJECT_DIR$/src/routes/matches.js" />
@@ -196,7 +191,6 @@
         <option value="$PROJECT_DIR$/src/gcs/state-changes/index.js" />
         <option value="$PROJECT_DIR$/src/gcs/state-changes/initial-state.js" />
         <option value="$PROJECT_DIR$/src/gcs/state-changes/select-map.js" />
-        <option value="$PROJECT_DIR$/src/controllers/match-lobby.js" />
         <option value="$PROJECT_DIR$/src/gcs/state-changes/choose-initiator.js" />
         <option value="$PROJECT_DIR$/src/gcs/states/select-map-and-faction.js" />
         <option value="$PROJECT_DIR$/src/gcs/states/assign-teams.js" />
@@ -206,7 +200,6 @@
         <option value="$PROJECT_DIR$/src/gcs/states/play-game.test.js" />
         <option value="$PROJECT_DIR$/src/gcs/states/choose-initiator.test.js" />
         <option value="$PROJECT_DIR$/src/log.js" />
-        <option value="$PROJECT_DIR$/src/gcs/states/post-result-and-replays.js" />
         <option value="$PROJECT_DIR$/src/gcs/states/post-result-and-replays.test.js" />
         <option value="$PROJECT_DIR$/src/gcs/states/select-faction.test.js" />
         <option value="$PROJECT_DIR$/src/gcs/states/select-faction.js" />
@@ -214,11 +207,14 @@
         <option value="$PROJECT_DIR$/src/gcs/states/select-map.test.js" />
         <option value="$PROJECT_DIR$/src/gcs/states/select-map-or-faction.test.js" />
         <option value="$PROJECT_DIR$/src/gcs/states/select-map-or-faction.js" />
-        <option value="$PROJECT_DIR$/src/gcs/match-state-reducer.js" />
         <option value="$PROJECT_DIR$/src/gcs/states/state-util.js" />
         <option value="$PROJECT_DIR$/src/gcs/states/assign-players-to-teams.test.js" />
-        <option value="$PROJECT_DIR$/src/gcs/states/assign-players-to-teams.js" />
         <option value="$PROJECT_DIR$/src/gcs/match-state-reducer.test.js" />
+        <option value="$PROJECT_DIR$/src/gcs/match-state-reducer.js" />
+        <option value="$PROJECT_DIR$/src/gcs/states/assign-players-to-teams.js" />
+        <option value="$PROJECT_DIR$/src/gcs/states/post-result-and-replays.js" />
+        <option value="$PROJECT_DIR$/src/controllers/match-lobby.js" />
+        <option value="$PROJECT_DIR$/src/amazon/repos/match-repo.js" />
       </list>
     </option>
   </component>
@@ -251,9 +247,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -416,6 +409,9 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
+      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -1052,11 +1048,12 @@
       <workItem from="1490359964998" duration="54177000" />
       <workItem from="1490789241467" duration="8949000" />
       <workItem from="1490964400188" duration="322000" />
+      <workItem from="1490965753469" duration="4221000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="195917000" />
+    <option name="totallyTimeSpent" value="200138000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1069,6 +1066,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-3" y="0" width="1926" height="1052" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1084,7 +1082,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18854167" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18854167" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1277,32 +1275,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/amazon/repos/match-repo.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="90" column="22" lean-forward="false" selection-start-line="90" selection-start-column="22" selection-end-line="90" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/models/match.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="19" column="41" lean-forward="true" selection-start-line="19" selection-start-column="41" selection-end-line="19" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/gcs/state-changes/state-change.js" />
     <entry file="file://$PROJECT_DIR$/src/gcs/state-changes/index.js" />
     <entry file="file://$PROJECT_DIR$/src/gcs/state-changes/initial-state.js" />
     <entry file="file://$PROJECT_DIR$/src/gcs/state-changes/select-map.js" />
     <entry file="file://$PROJECT_DIR$/src/gcs/state-changes/choose-initiator.js" />
-    <entry file="file://$PROJECT_DIR$/src/controllers/match-lobby.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="47" column="20" lean-forward="false" selection-start-line="47" selection-start-column="20" selection-end-line="47" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/lodash/fp/_baseConvert.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="242">
@@ -1349,13 +1326,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="408">
           <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/gcs/states/post-result-and-replays.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="73" column="59" lean-forward="false" selection-start-line="73" selection-start-column="59" selection-end-line="73" selection-end-column="59" />
         </state>
       </provider>
     </entry>
@@ -1428,30 +1398,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/gcs/states/state-util.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="986">
-          <caret line="58" column="0" lean-forward="false" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/gcs/states/assign-players-to-teams.test.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1156">
-          <caret line="68" column="54" lean-forward="false" selection-start-line="68" selection-start-column="54" selection-end-line="68" selection-end-column="54" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/gcs/states/assign-players-to-teams.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="50" lean-forward="false" selection-start-line="5" selection-start-column="50" selection-end-line="5" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/gcs/match-state-reducer.test.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
@@ -1460,10 +1406,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/gcs/match-state-reducer.js">
+    <entry file="file://$PROJECT_DIR$/src/models/match.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="612">
-          <caret line="36" column="30" lean-forward="false" selection-start-line="36" selection-start-column="30" selection-end-line="36" selection-end-column="30" />
+        <state relative-caret-position="323">
+          <caret line="19" column="0" lean-forward="true" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/gcs/states/state-util.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="787">
+          <caret line="58" column="0" lean-forward="false" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1472,6 +1426,54 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/gcs/states/assign-players-to-teams.test.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="888">
+          <caret line="68" column="54" lean-forward="false" selection-start-line="68" selection-start-column="54" selection-end-line="68" selection-end-column="54" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/gcs/states/post-result-and-replays.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="463">
+          <caret line="64" column="0" lean-forward="false" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/gcs/match-state-reducer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="544">
+          <caret line="32" column="0" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/controllers/match-lobby.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="697">
+          <caret line="53" column="58" lean-forward="true" selection-start-line="53" selection-start-column="58" selection-end-line="53" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/gcs/states/assign-players-to-teams.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="701">
+          <caret line="53" column="0" lean-forward="false" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/amazon/repos/match-repo.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="616">
+          <caret line="159" column="39" lean-forward="false" selection-start-line="159" selection-start-column="39" selection-end-line="159" selection-end-column="39" />
           <folding />
         </state>
       </provider>
