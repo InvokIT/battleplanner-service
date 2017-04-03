@@ -3,7 +3,8 @@ const bunyan = require("bunyan");
 const envLevels = {
     "production": "info",
     "test": 100,
-    "debug": "trace"
+    "debug": "debug",
+    "dev": 0
 };
 
 const defaultLevel = process.env.NODE_ENV in envLevels ? envLevels[process.env.NODE_ENV] : "info";

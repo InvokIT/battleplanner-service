@@ -16,13 +16,15 @@ class MatchLobby {
         this.matchState = null;
     }
 
-    playerConnected(user, socket) {
+    userConnected(user, socket) {
+        log.info({matchId: this.matchId, user}, "Player connected to match");
+
         const player = {user, socket};
 
         this.players.push(player);
 
         socket.addEventListener("message", (data, flags) => this.onMessageReceived(user, socket, data));
-        socket.addEventListener("close", (code, reason) => this.onPlayerDisconnected(user, socket, code, reason));
+        socket.addEventListener("close", (code, reason) => this.onUserDisconnected(user, socket, code, reason));
         socket.addEventListener("error", error => this.onError(user, socket, error));
 
         this._sendPlayerListToPlayers();
@@ -31,7 +33,7 @@ class MatchLobby {
             .then(state => this._sendMatchStateToPlayer(state, player));
     }
 
-    onPlayerDisconnected(user, socket, code, reason) {
+    onUserDisconnected(user, socket, code, reason) {
         // Remove from this.players and log it
         remove(p => p.user.id === user.id, this.players);
         log.info({player: user, code, reason}, "Player disconnected");
@@ -105,6 +107,8 @@ class MatchLobby {
     }
 
     _sendMatchStateToPlayer(matchState, player) {
+        log.trace({matchState, user: player.user}, "Sending match state to user");
+
         return new Promise((resolve, reject) => {
             const msg = JSON.stringify({
                 type: "match-state-update",
@@ -112,46 +116,55 @@ class MatchLobby {
                 state: matchState
             });
 
-            p.socket.send(msg, (err) => {
+            player.socket.send(msg, (err) => {
                 if (err) {
                     log.error(
                         {
                             error,
                             matchId: this.matchId,
-                            user: player.user,
-                            data: msg
+                            user: player.user
                         },
                         "Error when sending state update to user."
                     );
-
                     reject(err);
                 } else {
+                    log.debug({user: player.user, matchId: this.matchId}, "Match state sent to user.");
                     resolve();
                 }
             });
+        }).catch(error => {
+            log.error({error}, "Error sending match state to user");
         });
     }
 
     _sendPlayerListToPlayers() {
         const playerList = this.players.map(p => p.user.id);
 
+        log.trace({playerList}, "Sending player list to users.");
+
+        const msg = JSON.stringify({
+            type: "players-update",
+            matchId: this.matchId,
+            players: playerList
+        });
+
         return Promise.all(this.players.map(
             p => new Promise((resolve, reject) => {
                 p.socket.send(
-                    {
-                        type: "players-update",
-                        matchId: this.matchId,
-                        players: playerList
-                    },
+                    msg,
                     (err) => {
                         if (err) {
+                            log.error({error: err, matchId: this.matchId, message: msg, user: p.user}, "Error sending player list to player");
                             reject(err);
                         } else {
+                            log.debug({message: msg, user: p.user}, "Player list sent to user");
                             resolve();
                         }
                     });
             })
-        ));
+        )).catch(err => {
+            log.error(err, "Error while sending player list to players.")
+        });
     }
 }
 
