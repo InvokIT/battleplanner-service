@@ -17,5 +17,9 @@ module.exports = {
         documentClient,
         table: process.env.AWS_DYNAMODB_TABLE_MATCH,
         historyTable: process.env.AWS_DYNAMODB_TABLE_MATCHHISTORY
+    }),
+    matchStateChange: new (require("./match-state-change-repo"))({
+        documentClient,
+        table: process.env.AWS_DYNAMODB_TABLE_MATCHSTATECHANGE
     })
 };

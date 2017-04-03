@@ -29,8 +29,14 @@ const getUserFromJwtPayload = (jwtPayload) => {
     );
 };
 
+const getUserFromEncodedJwt = (token) => {
+    const jwtPayload = jwt.verify(token, publicKey);
+    return getUserFromJwtPayload(jwtPayload);
+};
+
 module.exports.createJwtForUser = createJwtForUser;
 module.exports.getUserFromJwtPayload = getUserFromJwtPayload;
+module.exports.getUserFromEncodedJwt = getUserFromEncodedJwt;
 module.exports.options = Object.assign({algorithms: ["RS256"]}, jwtOptions);
 module.exports.setKeys = (_privateKey, _publicKey) => {
     privateKey = _privateKey;

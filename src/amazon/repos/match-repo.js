@@ -132,6 +132,48 @@ class MatchRepo extends GenericRepo {
             });
         });
     }
+
+    updateMatchTeams(matchId, teams) {
+        return new Promise((resolve, reject) => {
+            retry(this.retries, (done) => {
+                this.documentClient.update({
+                    TableName: this.table,
+                    Key: {id: matchId},
+                    UpdateExpression: `set teams = :teams`,
+                    ExpressionAttributeValues: {
+                        ":teams": teams
+                    }
+                }, done);
+            }, (err, data) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        });
+    }
+
+    updateMatchResults(matchId, results) {
+        return new Promise((resolve, reject) => {
+            retry(this.retries, (done) => {
+                this.documentClient.update({
+                    TableName: this.table,
+                    Key: {id: matchId},
+                    UpdateExpression: `set results = :results`,
+                    ExpressionAttributeValues: {
+                        ":results": results
+                    }
+                }, done);
+            }, (err, data) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        });
+    }
 }
 
 module.exports = MatchRepo;

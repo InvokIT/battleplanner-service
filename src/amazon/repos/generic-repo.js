@@ -4,6 +4,7 @@ const forEach = require("lodash/forEach");
 const isFunction = require("lodash/isFunction");
 const isNil = require("lodash/isNil");
 const isString = require("lodash/isString");
+const isEmpty = require("lodash/fp/isEmpty");
 const has = require("lodash/fp/has");
 
 class GenericRepo {
@@ -50,8 +51,8 @@ class GenericRepo {
 
     get(key) {
         return new Promise((resolve, reject) => {
-            if (isNil(key)) {
-                throw new Error("id is nil");
+            if (isNil(key) || isEmpty(key)) {
+                throw new Error("key is nil or empty");
             }
 
             retry(this.retries, (done) => this.documentClient.get({
