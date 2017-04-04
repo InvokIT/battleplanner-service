@@ -61,13 +61,33 @@ router.get(
         const user = req.user;
         matchController.getMatchesForUser(user)
             .then(matches => {
-                log.info()
                 res.json(matches);
             })
             .catch(err => {
                 log.error(err);
-                res.sendStatus(500);
+                res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
             });
+    }
+);
+
+router.get(
+    "/:matchId",
+    jwtAuthHeaderSecurity(),
+    async (req, res) => {
+        try {
+            const user = req.user;
+            const matchId = req.params.matchId;
+
+            const match = await matchController.getMatch(user, matchId);
+
+            log.info({match, user}, "GET /:matchId");
+
+            res.json(match);
+
+        } catch (err) {
+            log.error(err);
+            res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 );
 

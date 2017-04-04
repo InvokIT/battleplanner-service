@@ -33,6 +33,10 @@ module.exports = {
         });
     },
 
+    getMatch(user, matchId) {
+        return matches.get({id: matchId});
+    },
+
     getMatchesForUser(user) {
         const allMatches = isMatchAdmin(user);
         if (allMatches) {
