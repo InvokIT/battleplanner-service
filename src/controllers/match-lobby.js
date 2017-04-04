@@ -1,9 +1,11 @@
 const parallel = require("async/parallel");
 const reduce = require("lodash/fp/reduce");
-const remove = require("lodash/fp/remove");
+const _remove = require("lodash/remove");
+const without = require("lodash/fp/without");
 const isString = require("lodash/fp/isString");
 const defaultTo = require("lodash/fp/defaultTo");
 const cloneDeep = require("lodash/fp/cloneDeep");
+const uniq = require("lodash/fp/uniq");
 const log = require("../log")("controllers/match-lobby");
 const matchStateChangeRepo = require("../repos/match-state-change");
 const matchStateReducer = require("../gcs/match-state-reducer");
@@ -24,7 +26,7 @@ class MatchLobby {
         this.players.push(player);
 
         socket.addEventListener("message", (data, flags) => this.onMessageReceived(user, socket, data));
-        socket.addEventListener("close", (code, reason) => this.onUserDisconnected(user, socket, code, reason));
+        socket.addEventListener("close", (e) => this.onUserDisconnected(user, socket, e.code, e.reason));
         socket.addEventListener("error", error => this.onError(user, socket, error));
 
         this._sendPlayerListToPlayers();
@@ -35,8 +37,8 @@ class MatchLobby {
 
     onUserDisconnected(user, socket, code, reason) {
         // Remove from this.players and log it
-        remove(p => p.user.id === user.id, this.players);
-        log.info({player: user, code, reason}, "Player disconnected");
+        _remove(this.players, p => p.user.id === user.id);
+        log.info({player: user}, "Player disconnected");
     }
 
     onMessageReceived(user, socket, data) {
