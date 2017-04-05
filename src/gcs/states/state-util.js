@@ -3,6 +3,7 @@ const times = require("lodash/fp/times");
 const flow = require("lodash/fp/flow");
 const set = require("lodash/fp/set");
 const get = require("lodash/fp/get");
+const size = require("lodash/fp/size");
 const update = require("lodash/fp/update");
 const reduce = require("lodash/fp/reduce");
 const toNumber = require("lodash/fp/toNumber");
@@ -38,7 +39,7 @@ function getRoundInitiator(data) {
 
 module.exports = {
     defaultStateData: {
-        teams: [[], []], // Array of array of player ids,
+        teams: [[null], [null]], // Array of array of player ids,
         initiator: null, // Team that chooses first
         currentTeam: null, // Team making the current choice
         currentRound: 0,
@@ -81,7 +82,16 @@ module.exports = {
         log.trace({map, stateData}, "setMap");
 
         const currentRound = stateData.currentRound;
-        return set(`rounds[${currentRound}].map`, map)(stateData);
+        const roundCount = flow(get("rounds"), size)(state);
+
+        stateData = set(`rounds[${currentRound}].map`, map)(stateData);
+
+        // Also set map for the next round; players merely switch positions
+        if (currentRound+1 < roundCount) {
+            stateData = set(`rounds[${currentRound+1}].map`, map)(stateData);
+        }
+
+        return stateData;
     },
 
     nextTeam(stateData) {
