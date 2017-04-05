@@ -10,6 +10,7 @@ const log = require("../log")("controllers/match-lobby");
 const matchStateChangeRepo = require("../repos/match-state-change");
 const matchStateReducer = require("../gcs/match-state-reducer");
 const MatchStateChange = require("../models/match-state-change");
+const moment = require("moment");
 
 class MatchLobby {
     constructor(matchId) {
@@ -41,14 +42,16 @@ class MatchLobby {
         log.info({player: user}, "Player disconnected");
     }
 
-    onMessageReceived(user, socket, data) {
-        const msg = JSON.parse(data);
+    onMessageReceived(user, socket, e) {
+        const msg = JSON.parse(e.data);
         switch (msg.type) {
             case "state-change":
                 this.onStateChange(
                     user,
                     socket,
                     new MatchStateChange({
+                        matchId: this.matchId,
+                        time: moment().toISOString(),
                         name: msg.name,
                         params: defaultTo({}, msg.params)
                     })
