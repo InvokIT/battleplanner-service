@@ -32,6 +32,8 @@ class MatchLobby {
 
         this._sendPlayerListToPlayers();
 
+        this._addPlayerToTeamIfPossible(player);
+
         this._getMatchState()
             .then(state => this._sendMatchStateToPlayer(state, player));
     }
@@ -98,12 +100,49 @@ class MatchLobby {
     }
 
     sendPing() {
-        log.debug({matchId:this.matchId}, "Sending PING to players");
+        log.debug({matchId: this.matchId}, "Sending PING to players");
         this.players.forEach(player => {
             player.socket.send(JSON.stringify({
-               type: "ping"
+                type: "ping"
             }));
         })
+    }
+
+    async _addPlayerToTeamIfPossible(player) {
+        const state = await this._getMatchState();
+        const teams = state.data.teams;
+
+        if (state.name === "assign-players-to-teams") {
+            let availableTeam = null;
+            let availableSlot = null;
+            for (let teamNumber = 0; teamNumber < teams.length && availableSlot === null; ++teamNumber) {
+                for (let slotNumber = 0; slotNumber < teams[teamNumber].length; ++slotNumber) {
+                    if (teams[teamNumber][slotNumber] === null) {
+                        availableTeam = teamNumber;
+                        availableSlot = slotNumber;
+                        break;
+                    }
+                }
+            }
+
+            if (availableTeam !== null && availableSlot !== null) {
+                this.onStateChange(
+                    player.user,
+                    player.socket,
+                    new MatchStateChange({
+                        matchId: this.matchId,
+                        time: moment().toISOString(),
+                        name: "updateTeamPlayerSlot",
+                        params: {
+                            team: availableTeam,
+                            teamSlot: availableSlot,
+                            playerId: player.user.id,
+                            user: player.user
+                        }
+                    })
+                );
+            }
+        }
     }
 
     _getMatchState() {
@@ -174,7 +213,12 @@ class MatchLobby {
                     msg,
                     (err) => {
                         if (err) {
-                            log.error({error: err, matchId: this.matchId, message: msg, user: p.user}, "Error sending player list to player");
+                            log.error({
+                                error: err,
+                                matchId: this.matchId,
+                                message: msg,
+                                user: p.user
+                            }, "Error sending player list to player");
                             reject(err);
                         } else {
                             log.debug({message: msg, user: p.user}, "Player list sent to user");
