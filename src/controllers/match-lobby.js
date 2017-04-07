@@ -40,6 +40,12 @@ class MatchLobby {
         // Remove from this.players and log it
         _remove(this.players, p => p.user.id === user.id);
         log.info({player: user}, "Player disconnected");
+
+        if (this.players.length === 0) {
+            // Remove self from lobbies map
+            log.debug({matchId: this.matchId}, "Removed lobby from cache.");
+            lobbies.delete(this.matchId);
+        }
     }
 
     onMessageReceived(user, socket, e) {
@@ -89,6 +95,15 @@ class MatchLobby {
             return this._sendMatchStateToPlayers(newState);
         });
 
+    }
+
+    sendPing() {
+        log.debug({matchId:this.matchId}, "Sending PING to players");
+        this.players.forEach(player => {
+            player.socket.send(JSON.stringify({
+               type: "ping"
+            }));
+        })
     }
 
     _getMatchState() {
@@ -174,6 +189,11 @@ class MatchLobby {
 }
 
 const lobbies = new Map();
+
+// Ping all connected users every 10 seconds
+setInterval(() => {
+    lobbies.forEach(matchLobby => matchLobby.sendPing());
+}, 10 * 1000);
 
 module.exports = (matchId) => {
     if (lobbies.has(matchId)) {
