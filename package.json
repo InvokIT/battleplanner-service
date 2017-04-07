@@ -1,36 +1,43 @@
 {
-  "name": "gcs-match-setup-server",
+  "name": "battle-planner-server",
   "version": "0.0.1",
-  "main": "index.js",
+  "main": "./src/index.js",
   "author": "Qvazar <sj@invokit.dk>",
   "license": "MIT",
   "scripts": {
-    "start": "node ./index.js",
-    "dev": "mocha --growl --watch --harmony ./**/*.test.js",
-    "test": "mocha --harmony ./**/*.test.js",
-    "debug": "NODE_ENV=debug STEAM_REALM=http://localhost STEAM_KEY=9847B788F2BF89196983C546D3ECAC14 node ./index.js"
+    "start": "node ./src/index.js",
+    "dev": "NODE_ENV=test mocha --growl --watch --harmony --require ./src/test-setup $(find ./src -name *.test.js)",
+    "test": "mocha --harmony --require ./src/test-setup $(find ./src -name *.test.js)"
   },
   "engines": {
-    "node": "6.10.0"
+    "node": "7.8"
   },
   "dependencies": {
-    "@google-cloud/datastore": "^0.7.1",
-    "base-64": "^0.1.0",
+    "async": "^2.1.5",
+    "aws-sdk": "^2.29.0",
+    "body-parser": "^1.17.1",
+    "bufferutil": "^3.0.0",
     "bunyan": "^1.8.8",
     "cors": "^2.8.1",
     "express": "^4.15.2",
+    "express-ws": "^3.0.0",
+    "fast-crc32c": "^1.0.4",
+    "http-status": "^1.0.1",
     "jsonwebtoken": "^7.3.0",
     "lodash": "^4.17.4",
+    "moment": "^2.18.0",
     "passport": "^0.3.2",
     "passport-jwt": "^2.2.1",
-    "passport-restify": "^1.0.1",
     "passport-steam": "^1.0.8",
     "pug": "^2.0.0-beta11",
-    "restify": "^4.3.0",
+    "utf-8-validate": "^3.0.1",
     "uuid": "^3.0.1"
   },
   "devDependencies": {
+    "base-64": "^0.1.0",
     "chai": "^3.5.0",
-    "mocha": "^3.2.0"
+    "chai-as-promised": "^6.0.0",
+    "mocha": "^3.2.0",
+    "sinon": "^2.0.0"
   }
 }
