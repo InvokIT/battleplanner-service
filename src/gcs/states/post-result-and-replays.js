@@ -10,6 +10,9 @@ const log = require("../../log")(__filename);
 const {setWinner, setReplayUploaded, nextRound} = require("./state-util");
 
 function hasAllPlayersUploadedReplay(data) {
+    // TODO Remove below when replay uploading is implemented
+    return true;
+
     const currentRound = data.currentRound;
     return flow(
         get("teams"),
