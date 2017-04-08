@@ -82,7 +82,7 @@ module.exports = {
         log.trace({map, stateData}, "setMap");
 
         const currentRound = stateData.currentRound;
-        const roundCount = flow(get("rounds"), size)(state);
+        const roundCount = flow(get("rounds"), size)(stateData);
 
         stateData = set(`rounds[${currentRound}].map`, map)(stateData);
 

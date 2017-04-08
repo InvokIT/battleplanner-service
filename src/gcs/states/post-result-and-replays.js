@@ -46,36 +46,36 @@ class PostResultAndReplays {
         this.data = data;
     }
 
-    setResult({winnerTeam, winnerVictoryPoints, user}) {
+    setResult({winnerTeam, winnerVictoryPoints, userId}) {
         if (!isValidTeam(winnerTeam, this.data)) {
-            log.error({winnerTeam, winnerVictoryPoints, user}, "Invalid winnerTeam value.");
+            log.error({winnerTeam, winnerVictoryPoints, userId}, "Invalid winnerTeam value.");
             throw new Error("Invalid winnerTeam value");
         }
 
         if (!isValidVictoryPoints(winnerVictoryPoints)) {
-            log.error({winnerTeam, winnerVictoryPoints, user}, "Invalid winnerVictoryPoints value.");
+            log.error({winnerTeam, winnerVictoryPoints, userId}, "Invalid winnerVictoryPoints value.");
             throw new Error("Invalid winnerVictoryPoints value");
         }
 
         this.data = setWinner(winnerTeam, winnerVictoryPoints, this.data);
         const nextState = this.nextState();
 
-        log.info({nextState, user}, "User posted result");
+        log.info({nextState, userId}, "User posted result");
 
         return nextState;
     }
 
-    replayUploadedUpdate({user, value}) {
+    replayUploadedUpdate({userId, value}) {
         if (!isNumber(value) || value < 0 || value > 1) {
-            log.error({user, value}, "Invalid value for replay progress.");
+            log.error({userId, value}, "Invalid value for replay progress.");
             throw new Error("Invalid value for replay progress.");
         }
 
-        this.data = setReplayUploaded(user.id, value, this.data);
+        this.data = setReplayUploaded(userId, value, this.data);
 
         const nextState = this.nextState();
 
-        log.info({nextState, user, value}, "User updated replay progress");
+        log.info({nextState, userId, value}, "User updated replay progress");
 
         return nextState;
     }

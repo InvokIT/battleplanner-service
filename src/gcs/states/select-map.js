@@ -9,9 +9,9 @@ class SelectMap {
         this.data = data;
     }
 
-    selectMap({map, user}) {
+    selectMap({map, userId}) {
         if (!isString(map)) {
-            log.error({map, user}, "map is not a string");
+            log.error({map, userId}, "map is not a string");
             throw new Error("map is not a string");
         }
 
@@ -24,7 +24,7 @@ class SelectMap {
 
         };
 
-        log.info({nextState, user}, "User selected map");
+        log.info({nextState, userId}, "User selected map");
 
         return nextState;
     }

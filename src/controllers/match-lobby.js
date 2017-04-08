@@ -6,6 +6,8 @@ const isString = require("lodash/fp/isString");
 const defaultTo = require("lodash/fp/defaultTo");
 const cloneDeep = require("lodash/fp/cloneDeep");
 const uniq = require("lodash/fp/uniq");
+const flow = require("lodash/fp/flow");
+const set = require("lodash/fp/set");
 const log = require("../log")("controllers/match-lobby");
 const matchStateChangeRepo = require("../repos/match-state-change");
 const matchStateReducer = require("../gcs/match-state-reducer");
@@ -55,13 +57,12 @@ class MatchLobby {
         switch (msg.type) {
             case "state-change":
                 this.onStateChange(
-                    user,
                     socket,
                     new MatchStateChange({
                         matchId: this.matchId,
                         time: moment().toISOString(),
                         name: msg.name,
-                        params: defaultTo({}, msg.params)
+                        params: flow(defaultTo({}), set("userId", user.id))(msg.params)
                     })
                 );
                 break;
@@ -76,14 +77,12 @@ class MatchLobby {
         log.warn({player: user, error}, "Socket error");
     }
 
-    onStateChange(user, socket, stateChange) {
+    onStateChange(socket, stateChange) {
         // Save changes to match-state table
         return Promise.all([
             matchStateChangeRepo.save(stateChange),
             this._getMatchState()
         ]).then(([, state]) => {
-            stateChange.params.user = user;
-
             log.debug({stateChange}, "Received state-change");
 
             const newState = matchStateReducer([stateChange], state);
@@ -117,6 +116,11 @@ class MatchLobby {
             let availableSlot = null;
             for (let teamNumber = 0; teamNumber < teams.length && availableSlot === null; ++teamNumber) {
                 for (let slotNumber = 0; slotNumber < teams[teamNumber].length; ++slotNumber) {
+                    if (teams[teamNumber][slotNumber] === player.user.id) {
+                        // Abort, player is already on a team
+                        return;
+                    }
+
                     if (teams[teamNumber][slotNumber] === null) {
                         availableTeam = teamNumber;
                         availableSlot = slotNumber;
@@ -127,7 +131,6 @@ class MatchLobby {
 
             if (availableTeam !== null && availableSlot !== null) {
                 this.onStateChange(
-                    player.user,
                     player.socket,
                     new MatchStateChange({
                         matchId: this.matchId,
@@ -137,7 +140,7 @@ class MatchLobby {
                             team: availableTeam,
                             teamSlot: availableSlot,
                             playerId: player.user.id,
-                            user: player.user
+                            userId: player.user.id
                         }
                     })
                 );

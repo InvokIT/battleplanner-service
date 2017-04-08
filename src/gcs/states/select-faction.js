@@ -26,15 +26,15 @@ class SelectFaction {
         this.data = data;
     }
 
-    selectFaction({faction, user}) {
+    selectFaction({faction, userId}) {
         if (!isString(faction)) {
-            log.error({faction, user}, "faction is not a string");
+            log.error({faction, userId}, "faction is not a string");
             throw new Error("faction is not a string");
         }
 
         const newStateData = flow(
             cloneDeep,
-            setFaction(user.id, faction), nextTeam
+            setFaction(userId, faction), nextTeam
         )(this.data);
 
         let nextState;
@@ -45,7 +45,7 @@ class SelectFaction {
             nextState = {name: "select-faction", data: newStateData};
         }
 
-        log.info({nextState, user}, "User selected faction");
+        log.info({nextState, userId}, "User selected faction");
 
         return nextState;
     }

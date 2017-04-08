@@ -6,13 +6,13 @@ class PlayGame {
         this.data = data;
     }
 
-    gamePlayed({user}) {
+    gamePlayed({userId}) {
         const nextState = {
             name: "post-result-and-replays",
             data: cloneDeep(this.data)
         };
 
-        log.info({nextState, user}, "User said game has been played");
+        log.info({nextState, userId}, "User said game has been played");
 
         return nextState;
     }
