@@ -10,8 +10,8 @@ class ChooseInitiator {
         this.data = data;
     }
 
-    chooseInitiator({team, user}) {
-        log.trace({this: this, team, user}, "chooseInitiator");
+    chooseInitiator({team, userId}) {
+        log.trace({this: this, team, userId}, "chooseInitiator");
 
         if (!isNumber(team)) {
             log.error({team}, "team is not a number");
@@ -26,20 +26,13 @@ class ChooseInitiator {
             )(this.data)
         };
 
-        log.info({team, user, nextState}, "User chose initiating team.");
+        log.info({team, userId, nextState}, "User chose initiating team.");
 
         return nextState;
     }
 
-    flipCoin({user}) {
-        log.trace({this: this, user}, "flipCoin");
-
-        const randomTeam = Math.floor(Math.random() * this.data.teams.length);
-        return this.chooseInitiator({team: randomTeam, user: user});
-    }
-
-    continue({user}) {
-        log.trace({user}, "continue");
+    continue({userId}) {
+        log.trace({userId}, "continue");
 
         if (isNil(this.data.initiator)) {
             throw new Error("Cannot continue without an initator set.");

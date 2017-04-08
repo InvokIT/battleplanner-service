@@ -17,7 +17,7 @@ class AssignPlayersToTeams {
         this.data = data;
     }
 
-    updateTeamPlayerSlot({team, teamSlot, playerId, user}) {
+    updateTeamPlayerSlot({team, teamSlot, playerId, userId}) {
         if (!isNumber(team)) {
             throw new Error("Invalid team value.");
         }
@@ -38,18 +38,18 @@ class AssignPlayersToTeams {
             )(this.data)
         };
 
-        log.info({nextState, team, playerId, user}, "User assigned player to team.");
+        log.info({nextState, team, playerId, userId}, "User assigned player to team.");
 
         return nextState;
     }
 
-    teamsComplete({user}) {
+    teamsComplete({userId}) {
         if (!allTeamsHasPlayers(this.data)) {
-            log.error({user, state: this.data}, "Cannot complete teams. Not all teams has players.");
+            log.error({userId, state: this.data}, "Cannot complete teams. Not all teams has players.");
             throw new Error("Cannot complete teams. Not all teams has players.");
         }
 
-        log.info({user}, "User completed team assignment.");
+        log.info({userId}, "User completed team assignment.");
 
         return {
             name: "choose-initiator",

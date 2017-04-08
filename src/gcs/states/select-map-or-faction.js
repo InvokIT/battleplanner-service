@@ -9,9 +9,9 @@ class SelectMapOrFaction {
         this.data = data;
     }
 
-    selectMap({map, user}) {
+    selectMap({map, userId}) {
         if (!isString(map)) {
-            log.error({map, user}, "Invalid map value.");
+            log.error({map, userId}, "Invalid map value.");
             throw new Error("Invalid map value.");
         }
 
@@ -22,17 +22,16 @@ class SelectMapOrFaction {
                 setMap(map),
                 nextTeam
             )(this.data)
-
         };
 
-        log.info({nextState, user}, "User selected map");
+        log.info({nextState, userId}, "User selected map");
 
         return nextState;
     }
 
-    selectFaction({faction, user}) {
+    selectFaction({faction, userId}) {
         if (!isString(faction)) {
-            log.error({faction, user}, "Invalid faction value.");
+            log.error({faction, userId}, "Invalid faction value.");
             throw new Error("Invalid faction value.");
         }
 
@@ -40,12 +39,12 @@ class SelectMapOrFaction {
             name: "select-map",
             data: flow(
                 cloneDeep,
-                setFaction(user.id, faction),
+                setFaction(userId, faction),
                 nextTeam
             )(this.data)
         };
 
-        log.info({nextState, user}, "User selected faction");
+        log.info({nextState, userId}, "User selected faction");
 
         return nextState;
     }
