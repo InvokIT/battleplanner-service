@@ -1,0 +1,12 @@
+doctype html
+html
+    head
+        style.
+            .users .user {
+
+            }
+    body
+        ul.users
+            each user in users
+                li.user
+                    a(href=`/auth/dev/return?user=${user.id}`)= user.displayName
