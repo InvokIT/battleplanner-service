@@ -5,7 +5,7 @@ const isNumber = require("lodash/fp/isNumber");
 const isString = require("lodash/fp/isString");
 const isUndefined = require("lodash/fp/isUndefined");
 const log = require("../../log")(__filename);
-const {updateTeamPlayerSlot} = require("./state-util");
+const {updateTeamPlayerSlot, removePlayerFromTeams} = require("./state-util");
 const matchRepo = require("../../repos/match");
 
 function allTeamsHasPlayers(data) {
@@ -34,6 +34,7 @@ class AssignPlayersToTeams {
             name: "assign-players-to-teams",
             data: flow(
                 cloneDeep,
+                removePlayerFromTeams(playerId),
                 updateTeamPlayerSlot(team, teamSlot, playerId)
             )(this.data)
         };

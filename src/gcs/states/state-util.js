@@ -7,6 +7,7 @@ const size = require("lodash/fp/size");
 const update = require("lodash/fp/update");
 const reduce = require("lodash/fp/reduce");
 const toNumber = require("lodash/fp/toNumber");
+const forEach = require("lodash/fp/forEach");
 
 function getRoundInitiator(data) {
     const currentRound = data.currentRound;
@@ -62,6 +63,27 @@ module.exports = {
         return set(`teams[${team}][${teamSlot}]`, playerId)(stateData);
     },
 
+    removePlayerFromTeams(playerId, stateData) {
+        if (arguments.length < 2) {
+            return arguments.callee.bind(null, ...arguments);
+        }
+
+        log.trace({playerId, stateData}, "removePlayerFromTeams");
+
+        flow(
+            get("teams"),
+            forEach(team => {
+                team.forEach((pId, index) => {
+                    if (playerId === pId) {
+                        team[index] = null;
+                    }
+                });
+            })
+        )(stateData);
+
+        return stateData;
+    },
+
     setFaction(playerId, faction, stateData) {
         if (arguments.length < 3) {
             return arguments.callee.bind(null, ...arguments);
@@ -87,8 +109,8 @@ module.exports = {
         stateData = set(`rounds[${currentRound}].map`, map)(stateData);
 
         // Also set map for the next round; players merely switch positions
-        if (currentRound+1 < roundCount) {
-            stateData = set(`rounds[${currentRound+1}].map`, map)(stateData);
+        if (currentRound + 1 < roundCount) {
+            stateData = set(`rounds[${currentRound + 1}].map`, map)(stateData);
         }
 
         return stateData;
