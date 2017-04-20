@@ -6,6 +6,10 @@ const flatten = require("lodash/fp/flatten");
 const every = require("lodash/fp/every");
 const isInteger = require("lodash/fp/isInteger");
 const isString = require("lodash/fp/isString");
+const isNil = require("lodash/fp/isNil");
+const max = require("lodash/fp/max");
+const gt = require("lodash/fp/gt");
+const reduce = require("lodash/fp/reduce");
 const log = require("../../log")(__filename);
 const {setWinner, setReplayUploaded, nextRound} = require("./state-util");
 
@@ -43,6 +47,26 @@ function roundHasMap(data) {
 const isValidTeam = (winnerTeam, data) => winnerTeam >= 0 && winnerTeam < data.teams.length;
 
 const isValidVictoryPoints = (victoryPoints) => victoryPoints > 0 && victoryPoints <= 500;
+
+const isGameOver = (stateData) => {
+    // The game is over when a team has won more than rounds.length / 2
+    const winsRequired = (stateData.rounds.length / 2) + 1;
+
+    const r = flow(
+        get("rounds"),
+        reduce((wins, round) => {
+            if (!isNil(round.winner)) {
+                wins[round.winner] += 1;
+            }
+
+            return wins;
+        }, [0, 0]),
+        max,
+        wins => wins >= winsRequired
+    )(stateData);
+
+    return r;
+};
 
 class PostResultAndReplays {
     constructor(data) {
@@ -87,15 +111,17 @@ class PostResultAndReplays {
         let nextStateName;
         let data = this.data;
         if (hasAllPlayersUploadedReplay(this.data) && hasWinnerBeenSet(this.data)) {
-            data = nextRound(this.data);
-
-            if (roundHasMap(data)) {
-                nextStateName = "select-faction";
+            if (isGameOver(this.data)) {
+                nextStateName = "game-over";
             } else {
-                nextStateName = "select-map-or-faction";
-            }
-            // TODO What if there is no more rounds?
+                data = nextRound(this.data);
 
+                if (roundHasMap(data)) {
+                    nextStateName = "select-faction";
+                } else {
+                    nextStateName = "select-map-or-faction";
+                }
+            }
         } else {
             nextStateName = "post-result-and-replays";
         }
