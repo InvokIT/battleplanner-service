@@ -50,7 +50,7 @@ const isValidVictoryPoints = (victoryPoints) => victoryPoints > 0 && victoryPoin
 
 const isGameOver = (stateData) => {
     // The game is over when a team has won more than rounds.length / 2
-    const winsRequired = (stateData.rounds.length / 2) + 1;
+    const winsRequired = Math.floor(stateData.rounds.length / 2) + 1;
 
     const r = flow(
         get("rounds"),
