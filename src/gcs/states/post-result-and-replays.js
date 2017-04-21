@@ -113,6 +113,8 @@ class PostResultAndReplays {
         if (hasAllPlayersUploadedReplay(this.data) && hasWinnerBeenSet(this.data)) {
             if (isGameOver(this.data)) {
                 nextStateName = "game-over";
+                data = cloneDeep(data);
+                data.currentRound = -1;
             } else {
                 data = nextRound(this.data);
 
