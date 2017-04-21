@@ -1,12 +1,20 @@
 const log = require("../../log")(__filename);
 const times = require("lodash/fp/times");
 const flow = require("lodash/fp/flow");
+const isNil = require("lodash/fp/isNil");
 const set = require("lodash/fp/set");
 const get = require("lodash/fp/get");
 const size = require("lodash/fp/size");
 const update = require("lodash/fp/update");
 const reduce = require("lodash/fp/reduce");
 const toNumber = require("lodash/fp/toNumber");
+const forEach = require("lodash/fp/forEach");
+const map = require("lodash/fp/map");
+const uniq = require("lodash/fp/uniq");
+const sortBy = require("lodash/fp/sortBy");
+const head = require("lodash/fp/head");
+const filter = require("lodash/fp/filter");
+const maps = require("../maps");
 
 function getRoundInitiator(data) {
     const currentRound = data.currentRound;
@@ -17,9 +25,13 @@ function getRoundInitiator(data) {
         return flow(
             get("rounds"),
             reduce((scores, round) => {
-                update(round.winner, (vps = 0) => vps + round.winnerVictoryPoints)(scores);
-            }, {}),
-            reduce((leader, vps, team) => {
+                if (!isNil(round.winner)) {
+                    scores[round.winner] += round.winnerVictoryPoints;
+                }
+                return scores;
+                // return update(round.winner, (vps = 0) => vps + round.winnerVictoryPoints)(scores);
+            }, [0, 0]),
+            scores => scores.reduce((leader, vps, team) => {
                 if (leader.vps > vps) {
                     return leader;
                 } else if (leader.vps < vps) {
@@ -31,11 +43,44 @@ function getRoundInitiator(data) {
             get("team")
         )(data);
     } else {
-        // Alternating initiator
-        const initiator = data.initiator;
-        return (initiator + currentRound) % 2;
+        // 0, 1, 1, 0, 0, 1, 1, 0...
+        const roundPair = Math.floor(currentRound / 2);
+        let roundInitiator = (data.initiator + currentRound) % 2;
+        if (roundPair % 2 === 1) {
+            roundInitiator = (roundInitiator + 1) % 2;
+        }
+
+        return roundInitiator;
     }
 }
+
+const setMapByRules = (stateData) => {
+    const currentRound = stateData.currentRound;
+    const rounds = stateData.rounds;
+
+    if (currentRound === rounds.length - 1) {
+        const playedMapIds = flow(
+            map(round => round.map),
+            uniq,
+            filter(m => !isNil(m))
+        )(rounds);
+
+        const nextMap = flow(
+            filter(m => !playedMapIds.includes(m.id)),
+            sortBy("deciderPreference"),
+            head
+        )(maps);
+
+        return set(`rounds[${currentRound}].map`, nextMap.id)(stateData);
+    } else if (currentRound % 2 === 1) {
+        // Same map as previous round
+        const previousMap = get(`rounds[${currentRound - 1}].map`)(stateData);
+        return set(`rounds[${currentRound}].map`, previousMap)(stateData);
+    } else {
+        // Let the players select
+        return stateData;
+    }
+};
 
 module.exports = {
     defaultStateData: {
@@ -62,6 +107,27 @@ module.exports = {
         return set(`teams[${team}][${teamSlot}]`, playerId)(stateData);
     },
 
+    removePlayerFromTeams(playerId, stateData) {
+        if (arguments.length < 2) {
+            return arguments.callee.bind(null, ...arguments);
+        }
+
+        log.trace({playerId, stateData}, "removePlayerFromTeams");
+
+        flow(
+            get("teams"),
+            forEach(team => {
+                team.forEach((pId, index) => {
+                    if (playerId === pId) {
+                        team[index] = null;
+                    }
+                });
+            })
+        )(stateData);
+
+        return stateData;
+    },
+
     setFaction(playerId, faction, stateData) {
         if (arguments.length < 3) {
             return arguments.callee.bind(null, ...arguments);
@@ -86,10 +152,10 @@ module.exports = {
 
         stateData = set(`rounds[${currentRound}].map`, map)(stateData);
 
-        // Also set map for the next round; players merely switch positions
-        if (currentRound+1 < roundCount) {
-            stateData = set(`rounds[${currentRound+1}].map`, map)(stateData);
-        }
+        // // Also set map for the next round; players merely switch positions
+        // if (currentRound + 1 < roundCount) {
+        //     stateData = set(`rounds[${currentRound + 1}].map`, map)(stateData);
+        // }
 
         return stateData;
     },
@@ -163,7 +229,8 @@ module.exports = {
 
         return flow(
             set("currentRound", currentRound),
-            data => set("currentTeam", getRoundInitiator(data))(data)
+            data => set("currentTeam", getRoundInitiator(data))(data),
+            setMapByRules
         )(stateData);
     }
 };

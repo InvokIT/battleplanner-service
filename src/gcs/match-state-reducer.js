@@ -11,7 +11,8 @@ const stateClasses = {
     "post-result-and-replays": require("./states/post-result-and-replays"),
     "select-faction": require("./states/select-faction"),
     "select-map": require("./states/select-map"),
-    "select-map-or-faction": require("./states/select-map-or-faction")
+    "select-map-or-faction": require("./states/select-map-or-faction"),
+    "game-over": require("./states/game-over")
 };
 
 const applyStateChange = (state, stateChange) => {

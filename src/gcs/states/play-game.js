@@ -9,15 +9,6 @@ class PlayGame {
     }
 
     continue({userId}) {
-        // TODO This is a short-circuit to skip post-result-and-replays state
-        return {
-            name: "select-faction",
-            data: flow(
-                cloneDeep,
-                nextRound
-            )(this.data)
-        };
-
         const nextState = {
             name: "post-result-and-replays",
             data: cloneDeep(this.data)
