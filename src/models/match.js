@@ -2,7 +2,7 @@ const isString = require("lodash/fp/isString");
 const uuid = require("uuid/v4");
 
 class Match {
-    constructor({id = uuid(), owner, name, active = true} = {}) {
+    constructor({id = uuid(), owner, name, active = true, summary} = {}) {
         if (!isString(id)) {
             throw new Error("id is not a string");
         }
@@ -15,6 +15,7 @@ class Match {
         this.active = active;
         this.owner = owner;
         this.name = name;
+        this.summary = summary;
     }
 }
 

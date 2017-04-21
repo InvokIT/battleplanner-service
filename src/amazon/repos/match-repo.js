@@ -133,6 +133,30 @@ class MatchRepo extends GenericRepo {
         });
     }
 
+    updateMatchSummary(matchId, summary) {
+        return new Promise((resolve, reject) => {
+            log.trace({matchId, summary}, "updateMatchSummary");
+
+            retry(this.retries, (done) => {
+                this.documentClient.update({
+                    TableName: this.table,
+                    Key: {id: matchId},
+                    UpdateExpression: `set summary = :summary`,
+                    ExpressionAttributeValues: {
+                        ":summary": summary
+                    }
+                }, done);
+            }, (err, data) => {
+                if (err) {
+                    log.error({matchId, summary: summary, error: err}, "Updating summary.");
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        });
+    }
+
     updateMatchTeams(matchId, teams) {
         return new Promise((resolve, reject) => {
             retry(this.retries, (done) => {

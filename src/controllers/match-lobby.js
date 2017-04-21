@@ -8,11 +8,24 @@ const cloneDeep = require("lodash/fp/cloneDeep");
 const uniq = require("lodash/fp/uniq");
 const flow = require("lodash/fp/flow");
 const set = require("lodash/fp/set");
+const pick = require("lodash/fp/pick");
+const map = require("lodash/fp/map");
 const log = require("../log")("controllers/match-lobby");
 const matchStateChangeRepo = require("../repos/match-state-change");
 const matchStateReducer = require("../gcs/match-state-reducer");
 const MatchStateChange = require("../models/match-state-change");
 const moment = require("moment");
+const matchRepo = require("../repos/match");
+
+const getSummary = state => {
+    return {
+        teams: state.data.teams,
+        initiator: state.data.initiator,
+        rounds: flow(
+            map(pick(["factions", "map", "winner", "winnerVictoryPoints"]))
+        )(state.data.rounds)
+    };
+};
 
 class MatchLobby {
     constructor(matchId) {
@@ -88,10 +101,8 @@ class MatchLobby {
             const newState = matchStateReducer([stateChange], state);
             this._setMatchState(newState);
 
-            // TODO Save teams to match table
-            //matchRepo.updateTeamsInMatch()
-            // TODO Add to results match property in table
-            //matchRepo.updateMatchResult
+            // Save match summary
+            matchRepo.updateMatchSummary(this.matchId, getSummary(newState));
 
             return this._sendMatchStateToPlayers(newState);
         });
