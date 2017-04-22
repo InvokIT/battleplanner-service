@@ -3,6 +3,7 @@ const flow = require("lodash/fp/flow");
 const get = require("lodash/fp/get");
 const flatten = require("lodash/fp/flatten");
 const every = require("lodash/fp/every");
+const isNil = require("lodash/fp/isNil");
 const isString = require("lodash/fp/isString");
 const log = require("../../log")(__filename);
 const {nextTeam, setFaction} = require("./state-util");
@@ -26,15 +27,19 @@ class SelectFaction {
         this.data = data;
     }
 
-    selectFaction({faction, userId}) {
+    selectFaction({playerId, faction, userId}) {
         if (!isString(faction)) {
             log.error({faction, userId}, "faction is not a string");
             throw new Error("faction is not a string");
         }
 
+        if (isNil(playerId)) {
+            playerId = userId;
+        }
+
         const newStateData = flow(
             cloneDeep,
-            setFaction(userId, faction), nextTeam
+            setFaction(playerId, faction), nextTeam
         )(this.data);
 
         let nextState;
