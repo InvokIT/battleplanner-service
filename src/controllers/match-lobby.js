@@ -257,6 +257,13 @@ module.exports = (matchId) => {
     if (lobbies.has(matchId)) {
         return lobbies.get(matchId);
     } else {
+        // Be sure the match actually exists
+        const match = matchRepo.get(matchId);
+
+        if (!match) {
+            return null;
+        }
+
         const lobby = new MatchLobby(matchId);
         lobbies.set(matchId, lobby);
         return lobby;

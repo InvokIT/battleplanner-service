@@ -51,8 +51,12 @@ class MatchRepo extends GenericRepo {
                 if (err) {
                     reject(err);
                 } else {
-                    const item = flow(values, flatten, head)(data.Responses);
-                    resolve(item ? new (this.modelClass)(item) : null);
+                    try {
+                        const item = flow(values, flatten, head)(data.Responses);
+                        resolve(item ? new (this.modelClass)(item) : null);
+                    } catch (err) {
+                        reject(err);
+                    }
                 }
             });
         });

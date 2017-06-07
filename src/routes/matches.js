@@ -82,6 +82,11 @@ router.get(
 
             log.info({match, user}, "GET /:matchId");
 
+            if (!match) {
+                res.sendStatus(404);
+                return;
+            }
+
             res.json(match);
 
         } catch (err) {
@@ -113,7 +118,15 @@ router.ws(
 
                     log.info({user, matchId}, "Websocket successfully authenticated.");
 
-                    matchLobbyController(matchId).userConnected(user, ws);
+                    const matchLobbyCtrl = matchLobbyController(matchId);
+
+                    if (!matchLobbyCtrl) {
+                        log.warn({matchId}, "Invalid matchId");
+                        ws.close();
+                        return;
+                    } else {
+                        matchLobbyCtrl.userConnected(user, ws);
+                    }
                 } else {
                     throw new Error(`Received message with type '${data.type}', expected 'auth'.`);
                 }

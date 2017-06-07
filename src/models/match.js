@@ -8,7 +8,7 @@ class Match {
         }
 
         if (!isString(owner)) {
-            throw new Error("owner is not a atring");
+            throw new Error("owner is not a string");
         }
 
         this.id = id;
