@@ -83,18 +83,20 @@ const setMapByRules = (stateData) => {
 };
 
 module.exports = {
+    createRoundsStateData: (roundCount) => times(() => ({
+        factions: {}, // Map of user-id to faction,
+        map: null, // Selected map
+        winner: null, // winner team number
+        winnerVictoryPoints: null, // Victory points of winner
+        replayUploaded: {} // Map of user-id to boolean
+    }), roundCount),
+
     defaultStateData: {
         teams: [[null], [null]], // Array of array of player ids,
         initiator: null, // Team that chooses first
         currentTeam: null, // Team making the current choice
         currentRound: 0,
-        rounds: times(() => ({
-            factions: {}, // Map of user-id to faction,
-            map: null, // Selected map
-            winner: null, // winner team number
-            winnerVictoryPoints: null, // Victory points of winner
-            replayUploaded: {} // Map of user-id to boolean
-        }), 5)
+        rounds: []
     },
 
     updateTeamPlayerSlot(team, teamSlot, playerId, stateData) {

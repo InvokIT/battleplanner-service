@@ -1,10 +1,12 @@
 const camelCase = require("lodash/fp/camelCase");
 const isString = require("lodash/fp/isString");
 const isFunction = require("lodash/fp/isFunction");
+const isNil = require("lodash/fp/isNil");
 const reduce = require("lodash/fp/reduce");
 const log = require("../log")(__filename);
 
 const stateClasses = {
+    "apply-match-options": require("./states/apply-match-options"),
     "assign-players-to-teams": require("./states/assign-players-to-teams"),
     "choose-initiator": require("./states/choose-initiator"),
     "play-game": require("./states/play-game"),
@@ -24,7 +26,13 @@ const applyStateChange = (state, stateChange) => {
         throw new Error(`stateChangeName is not a string.`);
     }
 
-    const stateInstance = new (stateClasses[state.name])(state.data);
+    const stateClass = stateClasses[state.name];
+
+    if (isNil(stateClass)) {
+        throw new Error(`Unknown state '${state.name}'.`)
+    }
+
+    const stateInstance = new stateClass(state.data);
 
     if (!isFunction(stateInstance[stateChangeName])) {
         throw new Error(`Unknown state-change ${stateChangeName} for state '${state.name}'`);
@@ -35,7 +43,7 @@ const applyStateChange = (state, stateChange) => {
 };
 
 const defaultState = {
-    name: "assign-players-to-teams",
+    name: "apply-match-options",
     data: require("./states/state-util").defaultStateData
 };
 

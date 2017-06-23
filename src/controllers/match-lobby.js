@@ -258,7 +258,7 @@ module.exports = (matchId) => {
         return lobbies.get(matchId);
     } else {
         // Be sure the match actually exists
-        const match = matchRepo.get(matchId);
+        const match = matchRepo.get({id: matchId});
 
         if (!match) {
             return null;
