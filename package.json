@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "start": "node ./src/index.js",
-    "dev": "NODE_ENV=test mocha --growl --watch --harmony --require ./src/test-setup $(find ./src -name *.test.js)",
+    "dev": "NODE_ENV=dev node ./src/index.js",
+    "watch": "NODE_ENV=test mocha --growl --watch --harmony --require ./src/test-setup $(find ./src -name *.test.js)",
     "test": "mocha --harmony --require ./src/test-setup $(find ./src -name *.test.js)"
   },
   "engines": {
@@ -37,6 +38,7 @@
     "base-64": "^0.1.0",
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
+    "dotenv": "^4.0.0",
     "mocha": "^3.2.0",
     "sinon": "^2.0.0"
   }
