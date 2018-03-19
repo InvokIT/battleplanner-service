@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node ./src/index.js",
-    "dev": "NODE_ENV=dev node ./src/index.js",
+    "dev": "NODE_ENV=dev node $NODE_DEBUG_OPTION ./src/index.js",
     "watch": "NODE_ENV=test mocha --growl --watch --harmony --require ./src/test-setup $(find ./src -name *.test.js)",
     "test": "mocha --harmony --require ./src/test-setup $(find ./src -name *.test.js)"
   },

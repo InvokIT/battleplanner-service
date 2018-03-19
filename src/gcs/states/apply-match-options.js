@@ -8,14 +8,23 @@ class ApplyMatchOptions {
         this.data = data;
     }
 
-    applyRoundCount({roundCount}) {
+    applyMatchOptions({playerCount, roundCount}) {
         const rounds = createRoundsStateData(roundCount);
+
+        if (!/\dv\d/.test(playerCount)) {
+            throw new Error(`Invalid playerCount value: ${playerCount}`);
+        }
+
+        const teams = playerCount.split("v")
+            .map(count => parseInt(count, 10))
+            .map(count => new Array(count));
 
         const nextState = {
             name: "apply-match-options",
             data: flow(
                 cloneDeep,
-                set("rounds", rounds)
+                set("rounds", rounds),
+                set("teams", teams)
             )(this.data)
         };
 

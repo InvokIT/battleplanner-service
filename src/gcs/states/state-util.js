@@ -58,21 +58,9 @@ const setMapByRules = (stateData) => {
     const currentRound = stateData.currentRound;
     const rounds = stateData.rounds;
 
-    if (currentRound === rounds.length - 1) {
-        const playedMapIds = flow(
-            map(round => round.map),
-            uniq,
-            filter(m => !isNil(m))
-        )(rounds);
-
-        const nextMap = flow(
-            filter(m => !playedMapIds.includes(m.id)),
-            sortBy("deciderPreference"),
-            head
-        )(maps);
-
-        return set(`rounds[${currentRound}].map`, nextMap.id)(stateData);
-    } else if (currentRound % 2 === 1) {
+    // TODO Separate GCS and UTT code
+    // In UTT players always select the map
+    if (currentRound % 2 === 1) {
         // Same map as previous round
         const previousMap = get(`rounds[${currentRound - 1}].map`)(stateData);
         return set(`rounds[${currentRound}].map`, previousMap)(stateData);

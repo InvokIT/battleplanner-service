@@ -110,6 +110,27 @@ describe("SelectMapOrFaction", () => {
             expect(nextState).to.have.property("name", "select-map");
             expect(nextState).to.have.deep.property("data.currentTeam", 0);
         });
+
+        it("in 2v2, should return state select faction for the next player on the team", () => {
+            const state = new SelectMapOrFaction(
+                flow(
+                    cloneDeep,
+                    set("teams[0][0]", "user1"),
+                    set("teams[0][1]", "user2"),
+                    set("teams[1][0]", "user3"),
+                    set("teams[1][1]", "user4"),
+                    set("currentTeam", 1)
+                )(defaultStateData)
+            );
+
+            let nextState = state.selectFaction({faction: "f1", user: {id: "user1"}});
+            expect(nextState).to.have.property("name", "select-faction");
+            expect(nextState).to.have.deep.property("data.currentTeam", 1);
+
+            let nextState2 = nextState.selectFaction({faction: "f1", user: {id: "user2"}});
+            expect(nextState2).to.have.property("name", "select-map");
+            expect(nextState2).to.have.deep.property("data.currentTeam", 0);
+        });
     });
 
 });

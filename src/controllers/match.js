@@ -23,14 +23,14 @@ module.exports = {
             .then(() => new Match(Object.assign({id: uuid()}, matchArgs)))
             .then(m => matches.save(m))
             .then(m => {
-                // Create match state changes that changes the round count and store to db
+                // Create match state changes that changes the round and player count and store to db
                 return new Promise((resolve, reject) => {
                     series([
                         (done) => matchStateChangeRepo.save(new MatchStateChange({
                             matchId: m.id,
                             time: moment().toISOString(),
-                            name: "applyRoundCount",
-                            params: {roundCount: m.roundCount}
+                            name: "applyMatchOptions",
+                            params: {roundCount: m.roundCount, playerCount: m.playerCount}
                         })).then(() => done()).catch(e => done(e)),
 
                         (done) => matchStateChangeRepo.save(new MatchStateChange({
