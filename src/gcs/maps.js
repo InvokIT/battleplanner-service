@@ -1,18 +1,19 @@
+// TODO Separate GCS and UTT code
 module.exports = [
     {
-        id: "faymonville approach",
+        id: "elst_outskirts",
         deciderPreference: 1
     },
     {
-        id: "kholodny ferma summer",
+        id: "crossing in the woods",
         deciderPreference: 2
     },
     {
-        id: "crossroads",
+        id: "rails_and_metal",
         deciderPreference: 3
     },
     {
-        id: "crossing in the woods",
+        id: "vaux_farmlands",
         deciderPreference: 4
     }
 ];
