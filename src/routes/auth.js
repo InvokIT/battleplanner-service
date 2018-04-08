@@ -2,6 +2,7 @@ const express = require('express');
 const passport = require('passport');
 const find = require("lodash/fp/find");
 const router = express.Router();
+const log = require("../log")("routes/auth.js")
 
 if (process.env.NODE_ENV === "dev") {
     router.get(
@@ -33,10 +34,7 @@ if (process.env.NODE_ENV === "dev") {
 //   user back to this application at /auth/steam/return
 router.get(
     '/steam',
-    passport.authenticate('steam', {failureRedirect: '/', session: false}),
-    (req, res) => {
-        res.redirect('/');
-    }
+    passport.authenticate('steam', {session: false})
 );
 
 // GET /auth/steam/return
@@ -44,14 +42,42 @@ router.get(
 //   request.  If authentication fails, the user will be redirected back to the
 //   login page.  Otherwise, the primary route function function will be called,
 //   which, in this example, will redirect the user to the home page.
+// router.get(
+//     '/steam/return',
+//     passport.authenticate('steam', {failureRedirect: '/auth/steam', session: false}),
+//     (req, res) => {
+//         res.render("auth-response", {
+//             response: req.user,
+//             targetOrigin: process.env.CLIENT_ORIGIN || 'http://localhost:3000'
+//         });
+//     }
+// );
+
 router.get(
-    '/steam/return',
-    passport.authenticate('steam', {failureRedirect: '/', session: false}),
-    (req, res) => {
-        res.render("auth-response", {
-            response: req.user,
-            targetOrigin: process.env.CLIENT_ORIGIN || 'http://localhost:3000'
-        });
+    'steam/return',
+    (req, res, next) => {
+        passport.authenticate('steam', (err, user, info) => {
+            if (err) {
+                log.error({"msg": "Error when receiving steam authentication.", "error": err});
+                return next(err);
+            }
+
+            if (!user) {
+                return res.redirect("/auth/steam");
+            }
+
+            req.logIn(user, (err) => {
+                if (err) {
+                    log.error({"msg": "Error when logging user in.", "error": err});
+                    return next(err);
+                }
+
+                res.render("auth-response", {
+                    response: user,
+                    targetOrigin: process.env.CLIENT_ORIGIN || 'http://localhost:3000'
+                });
+            });
+        })(req, res, next);
     }
 );
 
