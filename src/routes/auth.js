@@ -54,15 +54,19 @@ router.get(
 // );
 
 router.get(
-    'steam/return',
+    '/steam/return',
     (req, res, next) => {
+        log.info({route: "/steam/return"}, "Steam auth return")
         passport.authenticate('steam', (err, user, info) => {
+            log.info({"info": info, user:user, err:err}, "passport.authenticate executing.");
+
             if (err) {
-                log.error({"msg": "Error when receiving steam authentication.", "error": err});
+                log.error({"error": err}, "Error when receiving steam authentication.");
                 return next(err);
             }
 
             if (!user) {
+                log.error("User is null.");
                 return res.redirect("/auth/steam");
             }
 
